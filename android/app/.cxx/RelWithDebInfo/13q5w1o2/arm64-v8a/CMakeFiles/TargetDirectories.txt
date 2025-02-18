@@ -1,0 +1,2 @@
+A:/Flutter Projects/alalamia_spices/android/app/.cxx/RelWithDebInfo/13q5w1o2/arm64-v8a/CMakeFiles/edit_cache.dir
+A:/Flutter Projects/alalamia_spices/android/app/.cxx/RelWithDebInfo/13q5w1o2/arm64-v8a/CMakeFiles/rebuild_cache.dir

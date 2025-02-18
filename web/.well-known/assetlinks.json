@@ -1,0 +1,9 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.alalamia.alalamia_spices",
+    "sha256_cert_fingerprints":
+    ["C4:E4:19:06:6E:5E:DE:A2:D4:2B:CB:3F:F6:50:CB:5E:4F:47:91:41:EC:86:55:B1:B1:06:D5:6D:7D:9A:82:ED"]
+  }
+}]
