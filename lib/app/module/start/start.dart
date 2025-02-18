@@ -1,6 +1,7 @@
 import 'package:alalamia_spices/app/exports/provider.dart';
 import 'package:alalamia_spices/app/exports/widget.dart';
 import 'package:alalamia_spices/app/module/offers/offer_tab.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -17,6 +18,7 @@ import '../home/home_screen.dart';
 import '../../module/product_details/widget/badges.dart' as badges;
 
 late PersistentTabController persistentController;
+PageController pageController = PageController(initialPage: 0);
 
 class StartScreen extends StatefulWidget {
   const StartScreen({
@@ -240,75 +242,123 @@ class _StartScreenState extends State<StartScreen> {
     // ceilingPriceModel.getCeilingPrice();
     return SafeArea(
       child: Scaffold(
-          body: MultiProvider(
-            providers: [
-              ChangeNotifierProvider(
-                  create: (context) => AdvertisementSliderModel(context)),
-              ChangeNotifierProvider(
-                  create: (context) => MainCategoriesModel(context)),
-              ChangeNotifierProvider(
-                  create: (context) => MostSellingModel(context)),
-              ChangeNotifierProvider(create: (context) => OffersModel(context)),
-              ChangeNotifierProvider(
-                  create: (context) => NewArrivalModel(context)),
-              ChangeNotifierProvider(
-                  create: (context) => FavoriteModel(context)),
-              ChangeNotifierProvider(
-                  create: (context) => BranchesModel(context)),
-              ChangeNotifierProvider(
-                  create: (context) => AllCategoriesModel(context)),
-              ChangeNotifierProvider(create: (context) => UnitModel(context)),
-              ChangeNotifierProvider(create: (context) => UserModel(context)),
-              ChangeNotifierProvider(
-                  create: (context) => CountriesModel(context)),
-              ChangeNotifierProvider(
-                  create: (context) => SocialMediaModel(context)),
-              ChangeNotifierProvider(
-                  create: (context) => UserWalletModel(context)),
-              ChangeNotifierProvider(create: (context) => NoteModel(context)),
-              ChangeNotifierProvider(
-                  create: (context) => AdsPopupModel(context)),
-              ChangeNotifierProvider(
-                  create: (context) => ProductStatusModel(context)),
-            ],
-            child: PersistentTabView(
-              context,
-              controller: persistentController,
-              screens: _buildScreens(),
-              items: _navBarsItems(),
-              confineToSafeArea: true,
-              backgroundColor:
-                  Theme.of(context).primaryColor, // Default is Colors.white.
-              handleAndroidBackButtonPress: true, // Default is true.
-              resizeToAvoidBottomInset:
-                  true, // This needs to be true if you want to move up the screen on a non-scrollable screen when keyboard appears. Default is true.
-              stateManagement: true, // Default is true.
-              hideNavigationBarWhenKeyboardAppears: true,
-              //popBehaviorOnSelectedNavBarItemPress: PopActionScreensType.all,
-              padding: const EdgeInsets.only(top: 8),
-              isVisible: true,
-              animationSettings: const NavBarAnimationSettings(
-                navBarItemAnimation: ItemAnimationSettings(
-                  // Navigation Bar's items animation properties.
-                  duration: Duration(milliseconds: 400),
-                  curve: Curves.ease,
-                ),
-                screenTransitionAnimation: ScreenTransitionAnimationSettings(
-                  // Screen transition animation on change of selected tab.
-                  animateTabTransition: true,
-                  duration: Duration(milliseconds: 200),
-                  screenTransitionAnimationType:
-                      ScreenTransitionAnimationType.fadeIn,
+        body: MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+                create: (context) => AdvertisementSliderModel(context)),
+            ChangeNotifierProvider(
+                create: (context) => MainCategoriesModel(context)),
+            ChangeNotifierProvider(
+                create: (context) => MostSellingModel(context)),
+            ChangeNotifierProvider(create: (context) => OffersModel(context)),
+            ChangeNotifierProvider(
+                create: (context) => NewArrivalModel(context)),
+            ChangeNotifierProvider(create: (context) => FavoriteModel(context)),
+            ChangeNotifierProvider(create: (context) => BranchesModel(context)),
+            ChangeNotifierProvider(
+                create: (context) => AllCategoriesModel(context)),
+            ChangeNotifierProvider(create: (context) => UnitModel(context)),
+            ChangeNotifierProvider(create: (context) => UserModel(context)),
+            ChangeNotifierProvider(
+                create: (context) => CountriesModel(context)),
+            ChangeNotifierProvider(
+                create: (context) => SocialMediaModel(context)),
+            ChangeNotifierProvider(
+                create: (context) => UserWalletModel(context)),
+            ChangeNotifierProvider(create: (context) => NoteModel(context)),
+            ChangeNotifierProvider(create: (context) => AdsPopupModel(context)),
+            ChangeNotifierProvider(
+                create: (context) => ProductStatusModel(context)),
+          ],
+          // child: PersistentTabView(
+          //   context,
+          //   controller: persistentController,
+          //   screens: _buildScreens(),
+          //   items: _navBarsItems(),
+          //   confineToSafeArea: true,
+          //   backgroundColor:
+          //       Theme.of(context).primaryColor, // Default is Colors.white.
+          //   handleAndroidBackButtonPress: true, // Default is true.
+          //   resizeToAvoidBottomInset:
+          //       true, // This needs to be true if you want to move up the screen on a non-scrollable screen when keyboard appears. Default is true.
+          //   stateManagement: true, // Default is true.
+          //   hideNavigationBarWhenKeyboardAppears: true,
+          //   //popBehaviorOnSelectedNavBarItemPress: PopActionScreensType.all,
+          //   padding: const EdgeInsets.only(top: 8),
+          //   isVisible: true,
+          //   animationSettings: const NavBarAnimationSettings(
+          //     navBarItemAnimation: ItemAnimationSettings(
+          //       // Navigation Bar's items animation properties.
+          //       duration: Duration(milliseconds: 400),
+          //       curve: Curves.ease,
+          //     ),
+          //     screenTransitionAnimation: ScreenTransitionAnimationSettings(
+          //       // Screen transition animation on change of selected tab.
+          //       animateTabTransition: true,
+          //       duration: Duration(milliseconds: 200),
+          //       screenTransitionAnimationType:
+          //           ScreenTransitionAnimationType.fadeIn,
+          //     ),
+          //   ),
+          //   navBarHeight: kBottomNavigationBarHeight,
+          //   navBarStyle: NavBarStyle
+          //       .style6, // Choose the nav bar style with this property
+          // ),
+          child: Column(
+            children: [
+              Expanded(
+                child: PageView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  controller: pageController,
+                  children: _buildScreens(),
+                  onPageChanged: (value) {
+                    setState(() {
+                      _currentIndex = value;
+                    });
+                  },
                 ),
               ),
-              navBarHeight: kBottomNavigationBarHeight,
-              navBarStyle: NavBarStyle
-                  .style6, // Choose the nav bar style with this property
-            ),
+              CurvedNavigationBar(
+                index: _currentIndex,
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                animationCurve: Curves.linear,
+                items: <Widget>[
+                  Icon(
+                    CupertinoIcons.home,
+                    color: Colors.black,
+                  ),
+                  Icon(
+                    Icons.category,
+                    color: Colors.black,
+                  ),
+                  badges.Badges(
+                    textOnly: true,
+                    color: Colors.black,
+                  ),
+                  Icon(
+                    Icons.local_offer_outlined,
+                    color: Colors.black,
+                  ),
+                  Icon(
+                    CupertinoIcons.location,
+                    color: Colors.black,
+                  ),
+                ],
+                onTap: (index) {
+                  setState(() {
+                    _currentIndex = index;
+                    pageController.jumpToPage(index);
+                  });
+                },
+              ),
+            ],
           ),
-          floatingActionButton: const Align(
-              alignment: Alignment.centerLeft,
-              child: DraggableFloatingButton())),
+        ),
+        floatingActionButton: const Align(
+          alignment: Alignment.centerLeft,
+          child: DraggableFloatingButton(),
+        ),
+      ),
     );
 
     // IndexedStack(
