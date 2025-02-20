@@ -242,6 +242,43 @@ class _StartScreenState extends State<StartScreen> {
     // ceilingPriceModel.getCeilingPrice();
     return SafeArea(
       child: Scaffold(
+        extendBody: _currentIndex != 4,
+        bottomNavigationBar: CurvedNavigationBar(
+          height: kBottomNavigationBarHeight,
+          index: _currentIndex,
+          backgroundColor: Colors.transparent,
+          color: Theme.of(context).colorScheme.secondary,
+          buttonBackgroundColor: Theme.of(context).colorScheme.secondary,
+          animationCurve: Curves.linear,
+          items: <Widget>[
+            Icon(
+              CupertinoIcons.home,
+              color: Colors.white,
+            ),
+            Icon(
+              Icons.category,
+              color: Colors.white,
+            ),
+            badges.Badges(
+              textOnly: true,
+              color: Colors.white,
+            ),
+            Icon(
+              Icons.local_offer_outlined,
+              color: Colors.white,
+            ),
+            Icon(
+              CupertinoIcons.location,
+              color: Colors.white,
+            ),
+          ],
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+              pageController.jumpToPage(index);
+            });
+          },
+        ),
         body: MultiProvider(
           providers: [
             ChangeNotifierProvider(
@@ -304,54 +341,15 @@ class _StartScreenState extends State<StartScreen> {
           //   navBarStyle: NavBarStyle
           //       .style6, // Choose the nav bar style with this property
           // ),
-          child: Column(
-            children: [
-              Expanded(
-                child: PageView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  controller: pageController,
-                  children: _buildScreens(),
-                  onPageChanged: (value) {
-                    setState(() {
-                      _currentIndex = value;
-                    });
-                  },
-                ),
-              ),
-              CurvedNavigationBar(
-                index: _currentIndex,
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                animationCurve: Curves.linear,
-                items: <Widget>[
-                  Icon(
-                    CupertinoIcons.home,
-                    color: Colors.black,
-                  ),
-                  Icon(
-                    Icons.category,
-                    color: Colors.black,
-                  ),
-                  badges.Badges(
-                    textOnly: true,
-                    color: Colors.black,
-                  ),
-                  Icon(
-                    Icons.local_offer_outlined,
-                    color: Colors.black,
-                  ),
-                  Icon(
-                    CupertinoIcons.location,
-                    color: Colors.black,
-                  ),
-                ],
-                onTap: (index) {
-                  setState(() {
-                    _currentIndex = index;
-                    pageController.jumpToPage(index);
-                  });
-                },
-              ),
-            ],
+          child: PageView(
+            physics: const NeverScrollableScrollPhysics(),
+            controller: pageController,
+            children: _buildScreens(),
+            onPageChanged: (value) {
+              setState(() {
+                _currentIndex = value;
+              });
+            },
           ),
         ),
         floatingActionButton: const Align(

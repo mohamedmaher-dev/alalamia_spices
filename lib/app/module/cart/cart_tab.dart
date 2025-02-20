@@ -547,7 +547,7 @@ class _CartTabState extends State<CartTab> {
                                   buttonColor:
                                       Theme.of(context).secondaryHeaderColor,
                                   onTap: () {
-                                    persistentController.jumpToTab(0);
+                                    pageController.jumpTo(0);
                                   },
                                 ),
                               )

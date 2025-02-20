@@ -58,6 +58,7 @@ class Badges extends StatelessWidget {
           if (model.items.isEmpty) {
             return Icon(
               CupertinoIcons.cart,
+              color: color,
             );
           } else {
             return Badge(
@@ -73,7 +74,7 @@ class Badges extends StatelessWidget {
               ),
               child: Icon(
                 CupertinoIcons.cart,
-                color: Colors.black,
+                color: color,
               ),
             );
           }
