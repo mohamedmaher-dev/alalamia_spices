@@ -68,19 +68,19 @@ class AramexForm extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           /// name
-          TextFormFieldWithName(
-            controller: formProvider.recipientNameController,
-            hintTextFormField: allTranslations.text("recipientName"),
-            fieldName: allTranslations.text("recipientName"),
-            keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.next,
-            fieldRequired: starIcon,
-            onFieldSubmitted: () {
-              FocusScope.of(context).nextFocus();
-            },
-            validator: (value) => InputValidators.validateRequired(value),
-          ),
-          15.ph,
+          // TextFormFieldWithName(
+          //   controller: formProvider.recipientNameController,
+          //   hintTextFormField: allTranslations.text("recipientName"),
+          //   fieldName: allTranslations.text("recipientName"),
+          //   keyboardType: TextInputType.text,
+          //   textInputAction: TextInputAction.next,
+          //   fieldRequired: starIcon,
+          //   onFieldSubmitted: () {
+          //     FocusScope.of(context).nextFocus();
+          //   },
+          //   validator: (value) => InputValidators.validateRequired(value),
+          // ),
+          // 15.ph,
 
           /// location
           TextFormFieldWithName(
@@ -200,7 +200,7 @@ class AramexForm extends StatelessWidget {
                     latitude: double.parse(chosenLong.toString()),
                     title: chosenLocationName.toString(),
                     description: chosenLocationName.toString(),
-                    personName: formProvider.recipientNameController.text,
+                    personName: userProvider.userName,
                     phoneNumber1: userProvider.userPhone,
                     cellPhone: userProvider.userPhone,
                     emailAddress: userProvider.userEmail,

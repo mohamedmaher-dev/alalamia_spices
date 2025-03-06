@@ -111,15 +111,14 @@ class _MaterialAppWithThemeState extends State<MaterialAppWithTheme> {
 
     Widget mainWidget;
 
-    // if (appModel.token == '' && appConfigProvider.splashFirstSeen == false) {
-    //   mainWidget = const SplashScreen();
-    // } else if (appModel.token == '' &&
-    //     appConfigProvider.splashFirstSeen == true) {
-    //   mainWidget = const AppConfigScreen();
-    // } else {
-    //   mainWidget = const StartScreen();
-    // }
-    mainWidget = const SplashScreen();
+    if (appModel.token == '' && appConfigProvider.splashFirstSeen == false) {
+      mainWidget = const SplashScreen();
+    } else if (appModel.token == '' &&
+        appConfigProvider.splashFirstSeen == true) {
+      mainWidget = const AppConfigScreen();
+    } else {
+      mainWidget = const StartScreen();
+    }
     return ChangeNotifierProvider<ThemeModel>(
       create: (_) {
         return themeChangeProvider;

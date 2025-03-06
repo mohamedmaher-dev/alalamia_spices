@@ -280,39 +280,43 @@ class _BranchesLocationTabState extends State<BranchesLocationTab>
                                             Icons.phone,
                                           ),
                                           title: Text(
+                                            locale: Locale("en"),
+                                            style: TextStyle(
+                                              fontFamily: "cairo",
+                                            ),
                                             "${model.items[index].phone}",
                                           ),
                                           subtitle: Text(
                                             'رقم الهاتف',
                                           ),
                                         ),
-                                        ListTile(
-                                          leading: Icon(
-                                            Icons.email,
-                                          ),
-                                          title: Text(
-                                            "${model.items[index].email}",
-                                          ),
-                                          subtitle: Text(
-                                            'البريد الالكتروني',
-                                          ),
-                                        ),
-                                        // FilledButton(
-                                        //     onPressed: () {
-                                        //       branchInfo = Branches(
-                                        //           name: model.items[index].name,
-                                        //           email:
-                                        //               model.items[index].email,
-                                        //           phone:
-                                        //               model.items[index].phone);
-                                        //       lat = model.items[index].lat;
-                                        //       long = model.items[index].long;
-                                        //       currentlySelectedPin = branchInfo;
-                                        //       MapsLauncher.launchCoordinates(
-                                        //           double.parse(lat!),
-                                        //           double.parse(long!));
-                                        //     },
-                                        //     child: Text("الذهاب للفرع"))
+                                        // ListTile(
+                                        //   leading: Icon(
+                                        //     Icons.email,
+                                        //   ),
+                                        //   title: Text(
+                                        //     "${model.items[index].email}",
+                                        //   ),
+                                        //   subtitle: Text(
+                                        //     'البريد الالكتروني',
+                                        //   ),
+                                        // ),
+                                        FilledButton(
+                                            onPressed: () {
+                                              branchInfo = Branches(
+                                                  name: model.items[index].name,
+                                                  email:
+                                                      model.items[index].email,
+                                                  phone:
+                                                      model.items[index].phone);
+                                              lat = model.items[index].lat;
+                                              long = model.items[index].long;
+                                              currentlySelectedPin = branchInfo;
+                                              MapsLauncher.launchCoordinates(
+                                                  double.parse(lat!),
+                                                  double.parse(long!));
+                                            },
+                                            child: Text("الذهاب للفرع"))
                                       ],
                                     ),
                                   ),

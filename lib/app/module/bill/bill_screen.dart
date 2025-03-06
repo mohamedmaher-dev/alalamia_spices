@@ -1695,10 +1695,15 @@ class _SubBillScreenState extends State<SubBillScreen> {
                 CustomDialog.hideCustomDialog(context);
               });
               await cartModel.loadData();
+              for (int i = 0; i < cartModel.items.length; i++) {
+                await cartModel.delete(
+                    cartModel.items[i], cartModel.items[i].type);
+              }
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => const StartScreen()),
                   (route) => false);
+              pageController.jumpToPage(2);
             },
           );
         } else {

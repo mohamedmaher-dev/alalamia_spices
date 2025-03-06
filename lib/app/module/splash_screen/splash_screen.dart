@@ -26,8 +26,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   startTime() async {
     var duration = Platform.isIOS
-        ? const Duration(seconds: 4)
-        : const Duration(seconds: 4);
+        ? const Duration(seconds: 8)
+        : const Duration(seconds: 8);
     return Timer(
         duration, appModel.token == "" ? navigationPage : navigationPage2);
   }
@@ -43,7 +43,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (BuildContext context) => const StartScreen()));
+            builder: (BuildContext context) => const AppConfigScreen()));
   }
 
   @override
@@ -56,7 +56,7 @@ class _SplashScreenState extends State<SplashScreen> {
           body: SizedBox(
             height: double.infinity,
             child: Image.asset(
-              "assets/images/splash.gif",
+              "assets/images/intro.gif",
               fit: BoxFit.fitHeight,
             ),
           )),
