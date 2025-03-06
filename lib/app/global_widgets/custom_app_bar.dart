@@ -140,6 +140,7 @@
 //   }
 // }
 
+import 'package:alalamia_spices/app/module/branches/branches_location_tab.dart';
 import 'package:alalamia_spices/app/module/user/notifications/notifications_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -150,25 +151,22 @@ import 'package:alalamia_spices/app/global_widgets/country_image_app_bar.dart';
 import 'package:alalamia_spices/app/module/search/search_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../core/values/app_images.dart';
-import '../module/cart/cart_tab.dart';
-import '../module/product_details/widget/badges.dart';
-import '../module/user/user_screen/user_screen.dart';
-import '../services/screen_navigation_service.dart';
 
 class CustomAppBar extends StatelessWidget {
   final bool isHome;
   final bool isSearchScreen;
-  final bool isProfileScreen;
+  final bool isBranchesScreen;
   final bool isCartScreen;
   final bool isNotifiScreen;
 
-  const CustomAppBar(
-      {super.key,
-      this.isHome = false,
-      this.isSearchScreen = false,
-      this.isProfileScreen = false,
-      this.isCartScreen = false,
-      this.isNotifiScreen = false});
+  const CustomAppBar({
+    super.key,
+    this.isHome = false,
+    this.isSearchScreen = false,
+    this.isBranchesScreen = false,
+    this.isCartScreen = false,
+    this.isNotifiScreen = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -189,37 +187,35 @@ class CustomAppBar extends StatelessWidget {
                     _buildLogo(),
                     _buildSearchIcon(context),
                     _buildImageCountry(context),
-                    _buildProfileIcon(context),
+                    _buildBranchesIcon(context),
                     _buildNotifiIcon(context)
                   ] else if (isSearchScreen == true) ...[
                     _buildArrowIcon(context),
                     _buildLogo(),
                     _buildImageCountry(context),
-                    _buildProfileIcon(context),
+                    _buildBranchesIcon(context),
                     _buildNotifiIcon(context)
-                  ] else if (isProfileScreen == true) ...[
-                    _buildArrowIcon(context),
+                  ] else if (isBranchesScreen == true) ...[
                     _buildLogo(),
                     _buildImageCountry(context),
-                    _buildSearchIcon(context),
                     _buildNotifiIcon(context)
                   ] else if (isCartScreen == true) ...[
                     _buildArrowIcon(context),
                     _buildLogo(),
                     _buildImageCountry(context),
                     _buildSearchIcon(context),
-                    _buildProfileIcon(context)
+                    _buildBranchesIcon(context)
                   ] else if (isNotifiScreen == true) ...[
                     _buildArrowIcon(context),
                     _buildLogo(),
                     _buildImageCountry(context),
                     _buildSearchIcon(context),
-                    _buildProfileIcon(context)
+                    _buildBranchesIcon(context)
                   ] else ...[
                     _buildArrowIcon(context),
                     _buildLogo(),
                     _buildSearchIcon(context),
-                    _buildProfileIcon(context),
+                    _buildBranchesIcon(context),
                     _buildNotifiIcon(context)
                   ],
                 ],
@@ -244,53 +240,45 @@ class CustomAppBar extends StatelessWidget {
     return connection.hasConnection ? const CountryImageAppBar() : 0.ph;
   }
 
-  Widget _buildProfileIcon(BuildContext context) {
-    return appModel.token == "visitor"
-        ? InkWell(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const UserScreen()));
-            },
-            child: Padding(
-              padding: EdgeInsets.only(left: 10.0.w, right: 10.0.w),
-              child: const Icon(
-                Icons.person_add_alt_1,
-                color: Colors.white,
-                size: 20,
-              ),
-            ),
-          )
-        : InkWell(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const UserScreen()));
-            },
-            child: Padding(
-              padding: EdgeInsets.only(left: 10.0.w, right: 10.0.w),
-              child: const Icon(
-                Icons.person,
-                color: Colors.white,
-                size: 20,
-              ),
-            ),
-          );
+  Widget _buildBranchesIcon(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const BranchesLocationTab()));
+      },
+      child: Padding(
+        padding: EdgeInsets.only(left: 10.0.w, right: 10.0.w),
+        child: const Icon(
+          Icons.location_on_sharp,
+          color: Colors.white,
+          size: 20,
+        ),
+      ),
+    );
   }
 
   Widget _buildNotifiIcon(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const NotificationsScreen(),
-          ),
-        );
-      },
-      icon: Icon(
-        CupertinoIcons.bell_fill,
-        color: Colors.white,
-      ),
-    );
+    if (appModel.token == "visitor") {
+      return SizedBox.shrink();
+    } else {
+      return IconButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const NotificationsScreen(),
+            ),
+          );
+        },
+        icon: Icon(
+          CupertinoIcons.bell_fill,
+          color: Colors.white,
+          size: 20,
+        ),
+      );
+    }
   }
 
   Widget _buildSearchIcon(BuildContext context) {

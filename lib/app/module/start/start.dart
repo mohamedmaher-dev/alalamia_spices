@@ -1,6 +1,7 @@
 import 'package:alalamia_spices/app/exports/provider.dart';
 import 'package:alalamia_spices/app/exports/widget.dart';
 import 'package:alalamia_spices/app/module/offers/offer_tab.dart';
+import 'package:alalamia_spices/app/module/user/user_screen/user_screen.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,7 +19,7 @@ import '../home/home_screen.dart';
 import '../../module/product_details/widget/badges.dart' as badges;
 
 late PersistentTabController persistentController;
-PageController pageController = PageController(initialPage: 0);
+PageController pageController = PageController(initialPage: 2);
 
 class StartScreen extends StatefulWidget {
   const StartScreen({
@@ -29,7 +30,7 @@ class StartScreen extends StatefulWidget {
   State<StartScreen> createState() => _StartScreenState();
 }
 
-int _currentIndex = 0;
+int _currentIndex = 2;
 
 class _StartScreenState extends State<StartScreen> {
   var fcm = FirebaseMessaging.instance;
@@ -71,7 +72,7 @@ class _StartScreenState extends State<StartScreen> {
   void initState() {
     super.initState();
     _requestPermission();
-    persistentController = PersistentTabController(initialIndex: 0);
+    persistentController = PersistentTabController(initialIndex: 2);
     fcm.getToken().then((token) {
       if (kDebugMode) {
         print("device token = $token");
@@ -113,118 +114,13 @@ class _StartScreenState extends State<StartScreen> {
 
   List<Widget> _buildScreens() {
     return [
-      const HomeScreen(),
       const CategoryTab(),
       // CartScreen(isFromProductDetails: false),
-      const CartTab(isFromProductDetails: false),
       OfferTab(),
-      const BranchesLocationTab()
-    ];
-  }
-
-  List<PersistentBottomNavBarItem> _navBarsItems() {
-    return [
-      /// home
-      PersistentBottomNavBarItem(
-          icon: const Icon(
-            CupertinoIcons.home,
-            size: 20,
-          ),
-          inactiveIcon: Icon(
-            CupertinoIcons.home,
-            size: 25,
-            color: Theme.of(context).secondaryHeaderColor,
-          ),
-          title: allTranslations.text('home'),
-          textStyle: Theme.of(context)
-              .textTheme
-              .bodySmall!
-              .copyWith(fontWeight: FontWeight.bold, fontSize: 12.sp),
-          activeColorPrimary: Theme.of(context).colorScheme.surface,
-          inactiveColorPrimary: Theme.of(context).secondaryHeaderColor,
-          activeColorSecondary: Theme.of(context).colorScheme.secondary,
-          contentPadding: 5.0.h),
-
-      /// category
-      PersistentBottomNavBarItem(
-          icon: const Icon(
-            Icons.category,
-            size: 20,
-          ),
-          inactiveIcon: Icon(
-            Icons.category,
-            size: 20,
-            color: Theme.of(context).secondaryHeaderColor,
-          ),
-          title: allTranslations.text('categories'),
-          textStyle: Theme.of(context)
-              .textTheme
-              .bodySmall!
-              .copyWith(fontWeight: FontWeight.bold, fontSize: 12.sp),
-          activeColorPrimary: Theme.of(context).colorScheme.surface,
-          inactiveColorPrimary: Theme.of(context).secondaryHeaderColor,
-          activeColorSecondary: Theme.of(context).colorScheme.secondary,
-          contentPadding: 5.0.h),
-
-      /// cart
-      PersistentBottomNavBarItem(
-          inactiveIcon: badges.Badges(textOnly: true),
-          icon: Icon(
-            CupertinoIcons.cart,
-            size: 20,
-            color: Theme.of(context).secondaryHeaderColor,
-          ),
-          title: allTranslations.text('cart'),
-          textStyle: Theme.of(context)
-              .textTheme
-              .bodySmall!
-              .copyWith(fontWeight: FontWeight.bold, fontSize: 12.sp),
-          activeColorPrimary: Theme.of(context).colorScheme.surface,
-          inactiveColorPrimary: Theme.of(context).secondaryHeaderColor,
-          activeColorSecondary: Theme.of(context).colorScheme.secondary,
-          contentPadding: 5.0.h),
-
-      /// offer
-      PersistentBottomNavBarItem(
-          icon: const Icon(
-            Icons.local_offer_outlined,
-            size: 20,
-          ),
-          inactiveIcon: Icon(
-            Icons.local_offer_outlined,
-            size: 20,
-            color: Theme.of(context).secondaryHeaderColor,
-          ),
-          title: allTranslations.text('offers'),
-          textStyle: Theme.of(context)
-              .textTheme
-              .bodySmall!
-              .copyWith(fontWeight: FontWeight.bold, fontSize: 12.sp),
-          activeColorPrimary: Theme.of(context).colorScheme.surface,
-          inactiveColorPrimary: Theme.of(context).secondaryHeaderColor,
-          activeColorSecondary: Theme.of(context).colorScheme.secondary,
-          contentPadding: 5.0.h),
-
-      /// providers
-      PersistentBottomNavBarItem(
-          icon: const Icon(
-            CupertinoIcons.location,
-            size: 20,
-          ),
-          inactiveIcon: Icon(
-            CupertinoIcons.location,
-            size: 20,
-            color: Theme.of(context).secondaryHeaderColor,
-          ),
-          title: allTranslations.text('providers'),
-          textStyle: Theme.of(context)
-              .textTheme
-              .bodySmall!
-              .copyWith(fontWeight: FontWeight.bold, fontSize: 12.sp),
-          activeColorPrimary: Theme.of(context).colorScheme.surface,
-          inactiveColorPrimary: Theme.of(context).secondaryHeaderColor,
-          activeColorSecondary: Theme.of(context).colorScheme.secondary,
-          contentPadding: 5.0.h),
+      const HomeScreen(),
+      const CartTab(isFromProductDetails: false),
+      // const BranchesLocationTab()
+      UserScreen(),
     ];
   }
 
@@ -242,7 +138,7 @@ class _StartScreenState extends State<StartScreen> {
     // ceilingPriceModel.getCeilingPrice();
     return SafeArea(
       child: Scaffold(
-        extendBody: _currentIndex != 4,
+        extendBody: true,
         bottomNavigationBar: CurvedNavigationBar(
           height: kBottomNavigationBarHeight,
           index: _currentIndex,
@@ -252,15 +148,7 @@ class _StartScreenState extends State<StartScreen> {
           animationCurve: Curves.linear,
           items: <Widget>[
             Icon(
-              CupertinoIcons.home,
-              color: Colors.white,
-            ),
-            Icon(
               Icons.category,
-              color: Colors.white,
-            ),
-            badges.Badges(
-              textOnly: true,
               color: Colors.white,
             ),
             Icon(
@@ -268,7 +156,15 @@ class _StartScreenState extends State<StartScreen> {
               color: Colors.white,
             ),
             Icon(
-              CupertinoIcons.location,
+              CupertinoIcons.home,
+              color: Colors.white,
+            ),
+            badges.Badges(
+              textOnly: true,
+              color: Colors.white,
+            ),
+            Icon(
+              CupertinoIcons.person,
               color: Colors.white,
             ),
           ],

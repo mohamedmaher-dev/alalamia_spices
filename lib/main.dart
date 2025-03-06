@@ -21,5 +21,5 @@ Future<void> main() async {
   await allTranslations.init();
   await FCMService.instance.init();
   HttpOverrides.global = MyHttpOverrides();
-  runApp(const AlalamiahApp());
+  runApp(AlalamiahApp());
 }

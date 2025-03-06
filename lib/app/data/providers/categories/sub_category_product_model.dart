@@ -1,4 +1,3 @@
-
 /// without pagination
 ///
 // import 'package:alalamia_spices/app/exports/provider.dart';
@@ -86,8 +85,8 @@
 //   Product get subCategoryProduct => items[0];
 // }
 
-
 /// pagination using infinite_scroll_pagination
+library;
 
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -98,17 +97,16 @@ import '../../../module/app_config/app_config_screen.dart';
 import '../../model/new_arrival.dart';
 
 class SubCategoryProductModel extends QueryModel {
-
   final String? subMainId;
   final String? mainId;
   static const _pageSize = 10;
-  final PagingController<int, Product> pagingController = PagingController(firstPageKey: 1);
+  final PagingController<int, Product> pagingController =
+      PagingController(firstPageKey: 1);
 
-  SubCategoryProductModel(super.context , {this.subMainId , this.mainId});
-
+  SubCategoryProductModel(super.context, {this.subMainId, this.mainId});
 
   @override
-  Future loadData([BuildContext? context]) async{
+  Future loadData([BuildContext? context]) async {
     pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
     });
@@ -118,21 +116,26 @@ class SubCategoryProductModel extends QueryModel {
     try {
       final data = await fetchDataa(
           appModel.token == "visitor"
-              ? "${AppUrl.categoryProductPaginateVisitor}$mainId/$subMainId?country_id=$countryId&?page=$pageKey"
-              : "${AppUrl.categoryProductPaginate}$mainId/$subMainId?page=$pageKey" , "");
+              ? "${AppUrl.categoryProductPaginateVisitor}$mainId/$subMainId?page=$pageKey"
+              : "${AppUrl.categoryProductPaginate}$mainId/$subMainId?page=$pageKey",
+          "");
 
       if (data != null) {
         debugPrint("Response Data: $data");
-        debugPrint("Response Data: ${AppUrl.categoryProductPaginateVisitor}/$mainId/$subMainId?page=$pageKey");
-        SubCategoryProductData subCategoryProductData = SubCategoryProductData.fromJson(data);
-        final isLastPage = subCategoryProductData.categoryProduct!.length < _pageSize;
+        debugPrint(
+            "Response Data: ${AppUrl.categoryProductPaginateVisitor}/$mainId/$subMainId?page=$pageKey");
+        SubCategoryProductData subCategoryProductData =
+            SubCategoryProductData.fromJson(data);
+        final isLastPage =
+            subCategoryProductData.categoryProduct!.length < _pageSize;
         if (isLastPage) {
-          pagingController.appendLastPage(subCategoryProductData.categoryProduct!);
+          pagingController
+              .appendLastPage(subCategoryProductData.categoryProduct!);
         } else {
           final nextPageKey = pageKey + 1;
-          pagingController.appendPage(subCategoryProductData.categoryProduct!, nextPageKey);
+          pagingController.appendPage(
+              subCategoryProductData.categoryProduct!, nextPageKey);
         }
-
       }
     } catch (error) {
       pagingController.error = error;
