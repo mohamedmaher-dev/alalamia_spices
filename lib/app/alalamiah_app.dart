@@ -4,9 +4,9 @@ import 'package:alalamia_spices/app/exports/provider.dart';
 import 'package:alalamia_spices/app/exports/widget.dart';
 import 'package:alalamia_spices/app/global_widgets/build_error_widget.dart';
 import 'package:alalamia_spices/app/module/app_config/provider/app_config_provider.dart';
-import 'package:alalamia_spices/app/module/splash_screen/splash_screen.dart';
+import 'package:alalamia_spices/app/module/intro_screen/intro_screen.dart';
+import 'package:alalamia_spices/app/module/splash/splash_view.dart';
 import 'package:alalamia_spices/app/module/start/start.dart';
-import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -112,7 +112,7 @@ class _MaterialAppWithThemeState extends State<MaterialAppWithTheme> {
     Widget mainWidget;
 
     if (appModel.token == '' && appConfigProvider.splashFirstSeen == false) {
-      mainWidget = const SplashScreen();
+      mainWidget = const IntroScreen();
     } else if (appModel.token == '' &&
         appConfigProvider.splashFirstSeen == true) {
       mainWidget = const AppConfigScreen();
@@ -155,7 +155,7 @@ class _MaterialAppWithThemeState extends State<MaterialAppWithTheme> {
               );
             },
             child: userModel.errorMessage == null
-                ? mainWidget
+                ? SplashView()
                 : const AppStatusMessage(),
           );
         },

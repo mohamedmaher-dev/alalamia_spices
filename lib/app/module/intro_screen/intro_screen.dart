@@ -1,19 +1,18 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:alalamia_spices/app/module/app_config/app_config_screen.dart';
-import 'package:alalamia_spices/app/module/start/start.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:alalamia_spices/app/exports/provider.dart';
 
-class SplashScreen extends StatefulWidget {
+class IntroScreen extends StatefulWidget {
   final Widget? stateful;
-  const SplashScreen({super.key, this.stateful});
+  const IntroScreen({super.key, this.stateful});
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  _IntroScreenState createState() => _IntroScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _IntroScreenState extends State<IntroScreen> {
   @override
   void initState() {
     super.initState();
@@ -26,10 +25,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
   startTime() async {
     var duration = Platform.isIOS
-        ? const Duration(seconds: 8)
-        : const Duration(seconds: 8);
+        ? const Duration(milliseconds: 8200)
+        : const Duration(milliseconds: 8200);
     return Timer(
-        duration, appModel.token == "" ? navigationPage : navigationPage2);
+        duration, appModel.token == null ? navigationPage : navigationPage2);
   }
 
   void navigationPage() {

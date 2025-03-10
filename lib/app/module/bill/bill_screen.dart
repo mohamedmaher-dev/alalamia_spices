@@ -1683,22 +1683,18 @@ class _SubBillScreenState extends State<SubBillScreen> {
             withYesButton: true,
             withActions: true,
             onPressed: () async {
-              await cartModel.deleteAll().then((value) {
-                pushScreenReplacement(
-                    context, const LastOrdersScreen(isFromBill: true));
-                billProvider.selectedShippingType = '';
-                chosenLocationId = null;
-                currentLocationId = null;
-                billProvider.selectedMinute = '';
-                billProvider.selectedDate = '';
-                billProvider.selectedHour = '';
-                CustomDialog.hideCustomDialog(context);
-              });
-              await cartModel.loadData();
-              for (int i = 0; i < cartModel.items.length; i++) {
+              for (int i = 0; i < cartList.items!.length; i++) {
                 await cartModel.delete(
-                    cartModel.items[i], cartModel.items[i].type);
+                    cartList.items![i], cartList.items![i].type!);
               }
+              billProvider.selectedShippingType = '';
+              chosenLocationId = null;
+              currentLocationId = null;
+              billProvider.selectedMinute = '';
+              billProvider.selectedDate = '';
+              billProvider.selectedHour = '';
+              CustomDialog.hideCustomDialog(context);
+              await cartModel.loadData();
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => const StartScreen()),
