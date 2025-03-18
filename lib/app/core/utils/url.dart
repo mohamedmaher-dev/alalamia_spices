@@ -1,17 +1,13 @@
 class AppUrl {
-
   AppUrl._();
 
   // static const  imageUrl = "http://almiaapi.infinitecloud.co";
   // static const  apiUrl = "http://200.200.194.238/Alalamia/Api_Alalamia/public/api/v1/user";
   // static const  guestUrl = "http://200.200.194.238/Alalamia/Api_Alalamia/public/api/v1/guest";
 
-  static const  imageUrl = "http://api.alalamiastore.com";
-  static const  apiUrl = "https://api.alalamiastore.com/api/v1/user";
-  static const  guestUrl = "https://api.alalamiastore.com/api/v1/guest";
-
-
-
+  static const imageUrl = "http://api.alalamiastore.com";
+  static const apiUrl = "https://api.alalamiastore.com/api/v1/user";
+  static const guestUrl = "https://api.alalamiastore.com/api/v1/guest";
 
   static const user = "$apiUrl/user";
   static const phoneCheck = "$apiUrl/check-phone";
@@ -38,7 +34,7 @@ class AppUrl {
   static const branch = "$apiUrl/branch";
   static const branchVisitor = "$guestUrl/branch";
   static const branchDetailsCategory = "$guestUrl/branch/";
-  static const branchDetailsCategory2= "$apiUrl/branch/";
+  static const branchDetailsCategory2 = "$apiUrl/branch/";
   static const specialOrder = "$apiUrl/special-product";
   static const suggestion = "$apiUrl/suggestion";
   static const offers = "$guestUrl/app-owner/offer";
@@ -121,10 +117,12 @@ class AppUrl {
   static const flooaskPurchaseConfirm = "$apiUrl/purchase_confirm";
   static const newFavoriteBranch = "$apiUrl/branch_favorites";
   static const personalAssistants = "$apiUrl/personal_assistants";
-  static const personalAssistantServices = "$apiUrl/personal_assistant_services";
+  static const personalAssistantServices =
+      "$apiUrl/personal_assistant_services";
   static const personalAssistantCountries = "$apiUrl/state_prices";
   static const statePrices = "$apiUrl/state_prices/";
-  static const personalAssistantLocation = "$apiUrl/personal_assistant_location";
+  static const personalAssistantLocation =
+      "$apiUrl/personal_assistant_location";
   static const jawaliEcommerceInquiry = "$apiUrl/ecommerceinquiry";
   static const jawaliEcommerceShout = "$apiUrl/ecommcashout";
   static const financialPortfolios = "$apiUrl/financial_portfolios";
@@ -138,7 +136,8 @@ class AppUrl {
   static const relatedProductVisitorPaginate = "$guestUrl/";
   static const categoryProductVisitor = "$guestUrl/category_product/";
   static const categoryProduct = "$apiUrl/category_product/";
-  static const categoryProductPaginateVisitor = "$guestUrl/category_product_paginate/";
+  static const categoryProductPaginateVisitor =
+      "$guestUrl/category_product_paginate/";
   static const categoryProductPaginate = "$apiUrl/category_product_paginate/";
   static const changeCountry = "$apiUrl/change_country";
   static const area = "$guestUrl/area";

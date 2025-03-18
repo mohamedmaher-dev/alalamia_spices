@@ -10,6 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../../core/utils/route.dart';
 import '../../core/values/app_images.dart';
@@ -209,86 +210,30 @@ Future<bool> checkPermission(BuildContext context) async {
   bool serviceEnabled;
   LocationPermission permission;
   serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  if (!serviceEnabled) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          'اذن الموقع',
-          style: Theme.of(context)
-              .textTheme
-              .bodyLarge!
-              .copyWith(fontWeight: FontWeight.bold, fontFamily: 'cairo'),
-        ),
-        content: Text(
-          'يرجى تفعيل خدمة الموقع للحصول على معلومات الموقع',
-          textAlign: TextAlign.center,
-          style: Theme.of(context)
-              .textTheme
-              .bodyLarge!
-              .copyWith(fontWeight: FontWeight.bold, fontFamily: 'cairo'),
-        ),
-      ),
-    );
+  if (serviceEnabled) {
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.deniedForever) {
+      await openAppSettings();
+      permission = await Geolocator.checkPermission();
+      return await _perrmissionToBool(permission);
+    } else if (permission == LocationPermission.denied) {
+      await Geolocator.openAppSettings();
+      permission = await Geolocator.requestPermission();
+      return await _perrmissionToBool(permission);
+    } else {
+      return true;
+    }
+  } else {
+    await Geolocator.openLocationSettings();
+    return false;
+  }
+}
+
+Future<bool> _perrmissionToBool(LocationPermission permission) async {
+  if (permission == LocationPermission.denied ||
+      permission == LocationPermission.deniedForever) {
     return false;
   } else {
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.whileInUse ||
-        permission == LocationPermission.always) {
-      return true;
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(
-            'اذن الموقع',
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge!
-                .copyWith(fontWeight: FontWeight.bold, fontFamily: 'cairo'),
-          ),
-          content: Text(
-            'يرجى تفعيل اذن الموقع للحصول على معلومات الموقع',
-            textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge!
-                .copyWith(fontWeight: FontWeight.bold, fontFamily: 'cairo'),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text(
-                'الغاء',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge!
-                    .copyWith(fontWeight: FontWeight.bold, fontFamily: 'cairo'),
-              ),
-            ),
-            TextButton(
-              onPressed: () async {
-                permission = await Geolocator.requestPermission();
-                if (permission == LocationPermission.whileInUse ||
-                    permission == LocationPermission.always) {
-                  Navigator.pop(context);
-                }
-              },
-              child: Text(
-                'موافق',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge!
-                    .copyWith(fontWeight: FontWeight.bold, fontFamily: 'cairo'),
-              ),
-            )
-          ],
-        ),
-      );
-
-      return false;
-    }
+    return true;
   }
 }

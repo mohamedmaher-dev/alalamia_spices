@@ -155,7 +155,6 @@ import '../core/values/app_images.dart';
 class CustomAppBar extends StatelessWidget {
   final bool isHome;
   final bool isSearchScreen;
-  final bool isBranchesScreen;
   final bool isCartScreen;
   final bool isNotifiScreen;
 
@@ -163,7 +162,6 @@ class CustomAppBar extends StatelessWidget {
     super.key,
     this.isHome = false,
     this.isSearchScreen = false,
-    this.isBranchesScreen = false,
     this.isCartScreen = false,
     this.isNotifiScreen = false,
   });
@@ -194,10 +192,6 @@ class CustomAppBar extends StatelessWidget {
                     _buildLogo(),
                     _buildImageCountry(context),
                     _buildBranchesIcon(context),
-                    _buildNotifiIcon(context)
-                  ] else if (isBranchesScreen == true) ...[
-                    _buildLogo(),
-                    _buildImageCountry(context),
                     _buildNotifiIcon(context)
                   ] else if (isCartScreen == true) ...[
                     _buildArrowIcon(context),

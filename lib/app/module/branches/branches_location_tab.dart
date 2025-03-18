@@ -160,9 +160,7 @@ class _BranchesLocationTabState extends State<BranchesLocationTab>
           backgroundColor: Theme.of(context).colorScheme.surface,
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(AppConstants.appBarHeight.h),
-            child: const CustomAppBar(
-              isBranchesScreen: true,
-            ),
+            child: const CustomAppBar(),
           ),
           body: ChangeNotifierProvider<BranchesModel>(
             create: (context) => BranchesModel(context),

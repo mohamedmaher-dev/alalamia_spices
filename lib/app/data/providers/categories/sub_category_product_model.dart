@@ -116,7 +116,7 @@ class SubCategoryProductModel extends QueryModel {
     try {
       final data = await fetchDataa(
           appModel.token == "visitor"
-              ? "${AppUrl.categoryProductPaginateVisitor}$mainId/$subMainId?page=$pageKey"
+              ? "${AppUrl.categoryProductPaginateVisitor}$mainId/$subMainId?country_id=$countryId&page=$pageKey"
               : "${AppUrl.categoryProductPaginate}$mainId/$subMainId?page=$pageKey",
           "");
 
