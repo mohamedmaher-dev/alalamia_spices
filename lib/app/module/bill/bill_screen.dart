@@ -2566,6 +2566,8 @@ class _SubBillScreenState extends State<SubBillScreen> {
                                                                               .user
                                                                               .currencyName ==
                                                                           "RY") {
+                                                                    print(
+                                                                        "=========================");
                                                                     setState(
                                                                         () {
                                                                       isUnsupportedCurrency =
@@ -2587,12 +2589,16 @@ class _SubBillScreenState extends State<SubBillScreen> {
                                                                             amount:
                                                                                 total.toStringAsFixed(2).toString(),
                                                                             currency: userModel.shortcutCurrency)
-                                                                        .then((value) {
+                                                                        .then((value) async {
                                                                       if (tapPaymentModel
                                                                               .tapId !=
                                                                           '') {
-                                                                        // _launchURL(tapPaymentModel.transactionUrl, "لا يمكن الوصول الى الموقع");
-                                                                        showModalBottomSheet(
+                                                                        // _launchURL(
+                                                                        //     tapPaymentModel.transactionUrl,
+                                                                        //     "لا يمكن الوصول الى الموقع");
+                                                                        CustomLoadingDialog.hideLoading(
+                                                                            context);
+                                                                        await showModalBottomSheet(
                                                                           context:
                                                                               context,
                                                                           isScrollControlled:
@@ -2607,7 +2613,7 @@ class _SubBillScreenState extends State<SubBillScreen> {
                                                                           builder: (context) =>
                                                                               CheckoutBottomSheet(checkoutUrl: tapPaymentModel.transactionUrl),
                                                                         );
-                                                                        CustomLoadingDialog.hideLoading(
+                                                                        Navigator.pop(
                                                                             context);
                                                                       } else {
                                                                         CustomLoadingDialog.hideLoading(
