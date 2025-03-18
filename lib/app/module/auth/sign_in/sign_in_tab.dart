@@ -1,3 +1,7 @@
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
+
+import 'dart:io';
+
 import 'package:alalamia_spices/app/core/utils/empty_padding.dart';
 import 'package:alalamia_spices/app/core/utils/route.dart';
 import 'package:alalamia_spices/app/exports/provider.dart';
@@ -13,7 +17,7 @@ import '../../../alalamiah_app.dart';
 import 'package:alalamia_spices/app/exports/model.dart';
 
 class SignInTab extends StatefulWidget {
-  const SignInTab({Key? key}) : super(key: key);
+  const SignInTab({super.key});
 
   @override
   State<SignInTab> createState() => _SignInTabState();
@@ -52,8 +56,6 @@ class _SignInTabState extends State<SignInTab> {
     // dialCode = countriesModel.dialCode;
     // print("initialCountry  ++ dialCode == $initialCountry + $dialCode");
 
-
-
     return ChangeNotifierProvider<UserModel>(
       create: (context) => UserModel(context),
       child: Consumer<UserModel>(
@@ -70,10 +72,9 @@ class _SignInTabState extends State<SignInTab> {
                     children: <Widget>[
                       /// user phone
 
-
                       CustomInternationalPhoneNumber(
-                        textInputAction: TextInputAction.next,
-                        fieldName: true,
+                          textInputAction: TextInputAction.next,
+                          fieldName: true,
                           onInputChanged: (PhoneNumber number) {
                             if (kDebugMode) {
                               print(number.phoneNumber);
@@ -84,13 +85,10 @@ class _SignInTabState extends State<SignInTab> {
                                 print(numberCode);
                               }
                             });
-                            countriesModel.chosenInitialCountry = number.isoCode!;
+                            countriesModel.chosenInitialCountry =
+                                number.isoCode!;
                           },
-                          textEditingController: phoneController
-                      ),
-
-
-
+                          textEditingController: phoneController),
 
                       20.ph,
 
@@ -153,98 +151,11 @@ class _SignInTabState extends State<SignInTab> {
                             });
 
                             ///object from User save user phone number just
-                            User user = User(phone: "$numberCode");
-                            FirebaseMessaging firebaseMessaging =
-                                FirebaseMessaging.instance;
-                            firebaseMessaging.getToken().then((fcm) async {
-                              if (kDebugMode) {
-                                print("FCM : ${fcm!}");
-                              }
-
-                              ///login function return data save on var userStatus
-                              // final SharedPreferences prefs = await SharedPreferences.getInstance();
-                              userStatus = await model.login(
-                                  user, passwordController.text, fcm!);
-                              if (model.isLoaded) {
-                                /// Subscribe the user to a topic for notifications
-                                FCMService.instance.subscribe();
-                                // prefs.remove("USER_STATUS");
-                                setState(() {
-                                  model.newUserCountryId = model.user.countryId.toString();
-                                  model.newUserCountryName = model.user.countryName.toString();
-                                });
-
-                                if (kDebugMode) {
-                                  print("Selected userCountryId = ${model.userCountryId}");
-                                  print("userChosenCountry = ${model.userCountryName}");
-                                }
-
-                                await MaterialAppWithTheme.restartApp(context);
-                              } else {
-                                // if (model.errorMessage != null) {
-                                //   setState(() {
-                                //     _isLoading = false;
-                                //   });
-                                //
-                                //   return CustomToast.showFlutterToast(
-                                //     context: context,
-                                //     message: model.errorMessage == "Unauthorized"
-                                //         ? allTranslations.text("unauthorizedUser")
-                                //         : model.errorMessage == "attitude"
-                                //             ? allTranslations.text("accountStopped")
-                                //             : model.errorMessage == "deleted"
-                                //                 ? allTranslations.text("accountDeleted")
-                                //                 : model.errorMessage == "blacklist"
-                                //               ? allTranslations.text("accountBlackList")
-                                //               : model.errorMessage,
-                                //   );
-                                // }
-
-                                ///test if user is attitude
-                               if (userStatus["status_message"] == "attitude") {
-                                  setState(() {
-                                    _isLoading = false;
-                                  });
-                                  return CustomToast.showFlutterToast(
-                                    context: context,
-                                    message:
-                                        allTranslations.text("accountStopped"),
-                                  );
-                                }
-
-                                ///test if user is deleted
-                                else if (userStatus["status_message"] == "deleted") {
-                                  setState(() {
-                                    _isLoading = false;
-                                  });
-                                  return CustomToast.showFlutterToast(
-                                    context: context,
-                                    message:
-                                        allTranslations.text("accountDeleted"),
-                                  );
-                                }
-                                else if (userStatus["status_message"] == "blacklist") {
-                                  setState(() {
-                                    _isLoading = false;
-                                  });
-                                  return CustomToast.showFlutterToast(
-                                    context: context,
-                                    message:
-                                    allTranslations.text("accountBlackList"),
-                                  );
-                                }
-                                else {
-                                  setState(() {
-                                    _isLoading = false;
-                                  });
-                                  return CustomToast.showFlutterToast(
-                                    context: context,
-                                    message: allTranslations
-                                        .text("incorrectUserData"),
-                                  );
-                                }
-                              }
-                            });
+                            if (Platform.isIOS) {
+                              await _LoginMethodIos(model, context);
+                            } else {
+                              await _LoginMethodAndroid(model, context);
+                            }
                           } else {
                             setState(() {
                               _isLoading = false;
@@ -266,12 +177,8 @@ class _SignInTabState extends State<SignInTab> {
                             textStyle: Theme.of(context).textTheme.bodyLarge,
                             buttonColor: Colors.transparent,
                             onTap: () {
-
-                              pushNamedScreen(
-                                  context,
-                                  Routes.phoneScreen,
-                                  arguments:  true
-                              );
+                              pushNamedScreen(context, Routes.phoneScreen,
+                                  arguments: true);
                             },
                           ),
                           CustomButtons(
@@ -300,6 +207,106 @@ class _SignInTabState extends State<SignInTab> {
         },
       ),
     );
+  }
+
+  Future<void> _LoginMethodAndroid(
+      UserModel model, BuildContext context) async {
+    User user = User(phone: "$numberCode");
+    FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+    final fcm = await firebaseMessaging.getToken();
+    await FCMService.instance.subscribe();
+    userStatus = await model.login(user, passwordController.text, fcm!);
+    if (model.isLoaded) {
+      await _ifLoginIsLoadedMethod(model, context);
+    } else {
+      return _ifLoginNotLoadedMethod(context);
+    }
+  }
+
+  Future<void> _LoginMethodIos(UserModel model, BuildContext context) async {
+    User user = User(phone: "$numberCode");
+    FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+    String? apnsToken = await firebaseMessaging.getAPNSToken();
+    String? fcm;
+    if (apnsToken != null) {
+      fcm = await firebaseMessaging.getToken();
+      await FCMService.instance.subscribe();
+      userStatus = await model.login(user, passwordController.text, fcm!);
+    } else {
+      await Future<void>.delayed(
+        const Duration(seconds: 3),
+      );
+      apnsToken = await firebaseMessaging.getAPNSToken();
+      if (apnsToken != null) {
+        fcm = await firebaseMessaging.getToken();
+        await FCMService.instance.subscribe();
+        userStatus = await model.login(user, passwordController.text, fcm!);
+      } else {
+        userStatus = await model.login(user, passwordController.text, '');
+      }
+    }
+    if (model.isLoaded) {
+      /// Subscribe the user to a topic for notifications
+      await _ifLoginIsLoadedMethod(model, context);
+    } else {
+      _ifLoginNotLoadedMethod(context);
+    }
+  }
+
+  Future<void> _ifLoginIsLoadedMethod(
+      UserModel model, BuildContext context) async {
+    /// Subscribe the user to a topic for notifications
+    // prefs.remove("USER_STATUS");
+    setState(() {
+      model.newUserCountryId = model.user.countryId.toString();
+      model.newUserCountryName = model.user.countryName.toString();
+    });
+
+    if (kDebugMode) {
+      print("Selected userCountryId = ${model.userCountryId}");
+      print("userChosenCountry = ${model.userCountryName}");
+    }
+
+    await MaterialAppWithTheme.restartApp(context);
+  }
+
+  _ifLoginNotLoadedMethod(BuildContext context) {
+    if (userStatus["status_message"] == "attitude") {
+      setState(() {
+        _isLoading = false;
+      });
+      return CustomToast.showFlutterToast(
+        context: context,
+        message: allTranslations.text("accountStopped"),
+      );
+    }
+
+    ///test if user is deleted
+    else if (userStatus["status_message"] == "deleted") {
+      setState(() {
+        _isLoading = false;
+      });
+      return CustomToast.showFlutterToast(
+        context: context,
+        message: allTranslations.text("accountDeleted"),
+      );
+    } else if (userStatus["status_message"] == "blacklist") {
+      setState(() {
+        _isLoading = false;
+      });
+      return CustomToast.showFlutterToast(
+        context: context,
+        message: allTranslations.text("accountBlackList"),
+      );
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+      return CustomToast.showFlutterToast(
+        context: context,
+        message: allTranslations.text("incorrectUserData"),
+      );
+    }
   }
 
   void _toggleNewPasswordView() {

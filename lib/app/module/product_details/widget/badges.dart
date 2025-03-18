@@ -7,9 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:alalamia_spices/app/exports/provider.dart';
 
 class Badges extends StatelessWidget {
-  const Badges({super.key, this.textOnly = false});
+  const Badges({super.key, this.textOnly = false, this.color = Colors.white});
   final bool textOnly;
-
+  final Color color;
   @override
   Widget build(BuildContext context) {
     final themeModel = Provider.of<ThemeModel>(context, listen: false);
@@ -58,19 +58,23 @@ class Badges extends StatelessWidget {
           if (model.items.isEmpty) {
             return Icon(
               CupertinoIcons.cart,
+              color: color,
             );
           } else {
             return Badge(
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
               label: Text(
                 model.items.length.toString(),
                 style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                      color: Theme.of(context).primaryColor,
+                      color: Colors.white,
                       fontSize: 10.sp,
                       fontFamily: "cairo",
                     ),
               ),
               child: Icon(
                 CupertinoIcons.cart,
+                color: color,
               ),
             );
           }

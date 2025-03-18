@@ -1,4 +1,3 @@
-
 import 'package:alalamia_spices/app/exports/provider.dart';
 import 'package:alalamia_spices/app/exports/model.dart';
 import 'package:flutter/foundation.dart';
@@ -10,24 +9,22 @@ class MainCategoriesModel extends QueryModel {
   MainCategoriesModel(super.context);
 
   @override
-  Future loadData([BuildContext? context]) async{
-
-    if(appModel.token != ''){
+  Future loadData([BuildContext? context]) async {
+    if (appModel.token != '') {
       var data;
-      try{
+      try {
         data = await fetchDataa(
             appModel.token == "visitor"
                 ? "${AppUrl.mainCategoryVisitor}?country_id=$countryId"
-                : AppUrl.mainCategory, ""
-        );
-
-      }catch (error) {
+                : AppUrl.mainCategory,
+            "");
+      } catch (error) {
         if (kDebugMode) {
           print("MainCategoriesModel catch error$error");
         }
       }
 
-      if(data != null){
+      if (data != null) {
         MainCategoryData mainCategoryData = MainCategoryData.fromJson(data);
         List mainCateList = mainCategoryData.mainCategory!;
         items.addAll(mainCateList);
@@ -38,11 +35,7 @@ class MainCategoriesModel extends QueryModel {
         // }
       }
     }
-
-
-
   }
 
   MainCategory get mainCateItems => items[0];
-
 }

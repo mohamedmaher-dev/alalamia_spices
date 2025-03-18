@@ -1,6 +1,8 @@
 import 'package:alalamia_spices/app/exports/provider.dart';
 import 'package:alalamia_spices/app/exports/widget.dart';
 import 'package:alalamia_spices/app/module/offers/offer_tab.dart';
+import 'package:alalamia_spices/app/module/user/user_screen/user_screen.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -17,6 +19,7 @@ import '../home/home_screen.dart';
 import '../../module/product_details/widget/badges.dart' as badges;
 
 late PersistentTabController persistentController;
+PageController pageController = PageController(initialPage: 2);
 
 class StartScreen extends StatefulWidget {
   const StartScreen({
@@ -27,7 +30,7 @@ class StartScreen extends StatefulWidget {
   State<StartScreen> createState() => _StartScreenState();
 }
 
-int _currentIndex = 0;
+int _currentIndex = 2;
 
 class _StartScreenState extends State<StartScreen> {
   var fcm = FirebaseMessaging.instance;
@@ -69,7 +72,7 @@ class _StartScreenState extends State<StartScreen> {
   void initState() {
     super.initState();
     _requestPermission();
-    persistentController = PersistentTabController(initialIndex: 0);
+    persistentController = PersistentTabController(initialIndex: 2);
     fcm.getToken().then((token) {
       if (kDebugMode) {
         print("device token = $token");
@@ -111,118 +114,13 @@ class _StartScreenState extends State<StartScreen> {
 
   List<Widget> _buildScreens() {
     return [
-      const HomeScreen(),
       const CategoryTab(),
       // CartScreen(isFromProductDetails: false),
-      const CartTab(isFromProductDetails: false),
       OfferTab(),
-      const BranchesLocationTab()
-    ];
-  }
-
-  List<PersistentBottomNavBarItem> _navBarsItems() {
-    return [
-      /// home
-      PersistentBottomNavBarItem(
-          icon: const Icon(
-            CupertinoIcons.home,
-            size: 20,
-          ),
-          inactiveIcon: Icon(
-            CupertinoIcons.home,
-            size: 25,
-            color: Theme.of(context).secondaryHeaderColor,
-          ),
-          title: allTranslations.text('home'),
-          textStyle: Theme.of(context)
-              .textTheme
-              .bodySmall!
-              .copyWith(fontWeight: FontWeight.bold, fontSize: 12.sp),
-          activeColorPrimary: Theme.of(context).colorScheme.surface,
-          inactiveColorPrimary: Theme.of(context).secondaryHeaderColor,
-          activeColorSecondary: Theme.of(context).colorScheme.secondary,
-          contentPadding: 5.0.h),
-
-      /// category
-      PersistentBottomNavBarItem(
-          icon: const Icon(
-            Icons.category,
-            size: 20,
-          ),
-          inactiveIcon: Icon(
-            Icons.category,
-            size: 20,
-            color: Theme.of(context).secondaryHeaderColor,
-          ),
-          title: allTranslations.text('categories'),
-          textStyle: Theme.of(context)
-              .textTheme
-              .bodySmall!
-              .copyWith(fontWeight: FontWeight.bold, fontSize: 12.sp),
-          activeColorPrimary: Theme.of(context).colorScheme.surface,
-          inactiveColorPrimary: Theme.of(context).secondaryHeaderColor,
-          activeColorSecondary: Theme.of(context).colorScheme.secondary,
-          contentPadding: 5.0.h),
-
-      /// cart
-      PersistentBottomNavBarItem(
-          inactiveIcon: badges.Badges(textOnly: true),
-          icon: Icon(
-            CupertinoIcons.cart,
-            size: 20,
-            color: Theme.of(context).secondaryHeaderColor,
-          ),
-          title: allTranslations.text('cart'),
-          textStyle: Theme.of(context)
-              .textTheme
-              .bodySmall!
-              .copyWith(fontWeight: FontWeight.bold, fontSize: 12.sp),
-          activeColorPrimary: Theme.of(context).colorScheme.surface,
-          inactiveColorPrimary: Theme.of(context).secondaryHeaderColor,
-          activeColorSecondary: Theme.of(context).colorScheme.secondary,
-          contentPadding: 5.0.h),
-
-      /// offer
-      PersistentBottomNavBarItem(
-          icon: const Icon(
-            Icons.local_offer_outlined,
-            size: 20,
-          ),
-          inactiveIcon: Icon(
-            Icons.local_offer_outlined,
-            size: 20,
-            color: Theme.of(context).secondaryHeaderColor,
-          ),
-          title: allTranslations.text('offers'),
-          textStyle: Theme.of(context)
-              .textTheme
-              .bodySmall!
-              .copyWith(fontWeight: FontWeight.bold, fontSize: 12.sp),
-          activeColorPrimary: Theme.of(context).colorScheme.surface,
-          inactiveColorPrimary: Theme.of(context).secondaryHeaderColor,
-          activeColorSecondary: Theme.of(context).colorScheme.secondary,
-          contentPadding: 5.0.h),
-
-      /// providers
-      PersistentBottomNavBarItem(
-          icon: const Icon(
-            CupertinoIcons.location,
-            size: 20,
-          ),
-          inactiveIcon: Icon(
-            CupertinoIcons.location,
-            size: 20,
-            color: Theme.of(context).secondaryHeaderColor,
-          ),
-          title: allTranslations.text('providers'),
-          textStyle: Theme.of(context)
-              .textTheme
-              .bodySmall!
-              .copyWith(fontWeight: FontWeight.bold, fontSize: 12.sp),
-          activeColorPrimary: Theme.of(context).colorScheme.surface,
-          inactiveColorPrimary: Theme.of(context).secondaryHeaderColor,
-          activeColorSecondary: Theme.of(context).colorScheme.secondary,
-          contentPadding: 5.0.h),
+      const HomeScreen(),
+      const CartTab(isFromProductDetails: false),
+      // const BranchesLocationTab()
+      UserScreen(),
     ];
   }
 
@@ -240,75 +138,121 @@ class _StartScreenState extends State<StartScreen> {
     // ceilingPriceModel.getCeilingPrice();
     return SafeArea(
       child: Scaffold(
-          body: MultiProvider(
-            providers: [
-              ChangeNotifierProvider(
-                  create: (context) => AdvertisementSliderModel(context)),
-              ChangeNotifierProvider(
-                  create: (context) => MainCategoriesModel(context)),
-              ChangeNotifierProvider(
-                  create: (context) => MostSellingModel(context)),
-              ChangeNotifierProvider(create: (context) => OffersModel(context)),
-              ChangeNotifierProvider(
-                  create: (context) => NewArrivalModel(context)),
-              ChangeNotifierProvider(
-                  create: (context) => FavoriteModel(context)),
-              ChangeNotifierProvider(
-                  create: (context) => BranchesModel(context)),
-              ChangeNotifierProvider(
-                  create: (context) => AllCategoriesModel(context)),
-              ChangeNotifierProvider(create: (context) => UnitModel(context)),
-              ChangeNotifierProvider(create: (context) => UserModel(context)),
-              ChangeNotifierProvider(
-                  create: (context) => CountriesModel(context)),
-              ChangeNotifierProvider(
-                  create: (context) => SocialMediaModel(context)),
-              ChangeNotifierProvider(
-                  create: (context) => UserWalletModel(context)),
-              ChangeNotifierProvider(create: (context) => NoteModel(context)),
-              ChangeNotifierProvider(
-                  create: (context) => AdsPopupModel(context)),
-              ChangeNotifierProvider(
-                  create: (context) => ProductStatusModel(context)),
-            ],
-            child: PersistentTabView(
-              context,
-              controller: persistentController,
-              screens: _buildScreens(),
-              items: _navBarsItems(),
-              confineToSafeArea: true,
-              backgroundColor:
-                  Theme.of(context).primaryColor, // Default is Colors.white.
-              handleAndroidBackButtonPress: true, // Default is true.
-              resizeToAvoidBottomInset:
-                  true, // This needs to be true if you want to move up the screen on a non-scrollable screen when keyboard appears. Default is true.
-              stateManagement: true, // Default is true.
-              hideNavigationBarWhenKeyboardAppears: true,
-              //popBehaviorOnSelectedNavBarItemPress: PopActionScreensType.all,
-              padding: const EdgeInsets.only(top: 8),
-              isVisible: true,
-              animationSettings: const NavBarAnimationSettings(
-                navBarItemAnimation: ItemAnimationSettings(
-                  // Navigation Bar's items animation properties.
-                  duration: Duration(milliseconds: 400),
-                  curve: Curves.ease,
-                ),
-                screenTransitionAnimation: ScreenTransitionAnimationSettings(
-                  // Screen transition animation on change of selected tab.
-                  animateTabTransition: true,
-                  duration: Duration(milliseconds: 200),
-                  screenTransitionAnimationType:
-                      ScreenTransitionAnimationType.fadeIn,
-                ),
-              ),
-              navBarHeight: kBottomNavigationBarHeight,
-              navBarStyle: NavBarStyle
-                  .style6, // Choose the nav bar style with this property
+        extendBody: true,
+        bottomNavigationBar: CurvedNavigationBar(
+          height: kBottomNavigationBarHeight,
+          index: _currentIndex,
+          backgroundColor: Colors.transparent,
+          color: Theme.of(context).colorScheme.secondary,
+          buttonBackgroundColor: Theme.of(context).colorScheme.secondary,
+          animationCurve: Curves.linear,
+          items: <Widget>[
+            Icon(
+              Icons.category,
+              color: Colors.white,
             ),
+            Icon(
+              Icons.local_offer_outlined,
+              color: Colors.white,
+            ),
+            Icon(
+              CupertinoIcons.home,
+              color: Colors.white,
+            ),
+            badges.Badges(
+              textOnly: true,
+              color: Colors.white,
+            ),
+            Icon(
+              CupertinoIcons.person,
+              color: Colors.white,
+            ),
+          ],
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+              pageController.jumpToPage(index);
+            });
+          },
+        ),
+        body: MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+                create: (context) => AdvertisementSliderModel(context)),
+            ChangeNotifierProvider(
+                create: (context) => MainCategoriesModel(context)),
+            ChangeNotifierProvider(
+                create: (context) => MostSellingModel(context)),
+            ChangeNotifierProvider(create: (context) => OffersModel(context)),
+            ChangeNotifierProvider(
+                create: (context) => NewArrivalModel(context)),
+            ChangeNotifierProvider(create: (context) => FavoriteModel(context)),
+            ChangeNotifierProvider(create: (context) => BranchesModel(context)),
+            ChangeNotifierProvider(
+                create: (context) => AllCategoriesModel(context)),
+            ChangeNotifierProvider(create: (context) => UnitModel(context)),
+            ChangeNotifierProvider(create: (context) => UserModel(context)),
+            ChangeNotifierProvider(
+                create: (context) => CountriesModel(context)),
+            ChangeNotifierProvider(
+                create: (context) => SocialMediaModel(context)),
+            ChangeNotifierProvider(
+                create: (context) => UserWalletModel(context)),
+            ChangeNotifierProvider(create: (context) => NoteModel(context)),
+            ChangeNotifierProvider(create: (context) => AdsPopupModel(context)),
+            ChangeNotifierProvider(
+                create: (context) => ProductStatusModel(context)),
+          ],
+          // child: PersistentTabView(
+          //   context,
+          //   controller: persistentController,
+          //   screens: _buildScreens(),
+          //   items: _navBarsItems(),
+          //   confineToSafeArea: true,
+          //   backgroundColor:
+          //       Theme.of(context).primaryColor, // Default is Colors.white.
+          //   handleAndroidBackButtonPress: true, // Default is true.
+          //   resizeToAvoidBottomInset:
+          //       true, // This needs to be true if you want to move up the screen on a non-scrollable screen when keyboard appears. Default is true.
+          //   stateManagement: true, // Default is true.
+          //   hideNavigationBarWhenKeyboardAppears: true,
+          //   //popBehaviorOnSelectedNavBarItemPress: PopActionScreensType.all,
+          //   padding: const EdgeInsets.only(top: 8),
+          //   isVisible: true,
+          //   animationSettings: const NavBarAnimationSettings(
+          //     navBarItemAnimation: ItemAnimationSettings(
+          //       // Navigation Bar's items animation properties.
+          //       duration: Duration(milliseconds: 400),
+          //       curve: Curves.ease,
+          //     ),
+          //     screenTransitionAnimation: ScreenTransitionAnimationSettings(
+          //       // Screen transition animation on change of selected tab.
+          //       animateTabTransition: true,
+          //       duration: Duration(milliseconds: 200),
+          //       screenTransitionAnimationType:
+          //           ScreenTransitionAnimationType.fadeIn,
+          //     ),
+          //   ),
+          //   navBarHeight: kBottomNavigationBarHeight,
+          //   navBarStyle: NavBarStyle
+          //       .style6, // Choose the nav bar style with this property
+          // ),
+          child: PageView(
+            physics: const NeverScrollableScrollPhysics(),
+            controller: pageController,
+            children: _buildScreens(),
+            onPageChanged: (value) {
+              setState(() {
+                _currentIndex = value;
+              });
+            },
           ),
-          floatingActionButton: const Align(
-              alignment: Alignment.centerLeft,
-              child: DraggableFloatingButton())),
+        ),
+        floatingActionButton: const Align(
+          alignment: Alignment.centerLeft,
+          child: DraggableFloatingButton(),
+        ),
+      ),
     );
 
     // IndexedStack(

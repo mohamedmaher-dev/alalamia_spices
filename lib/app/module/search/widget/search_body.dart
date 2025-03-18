@@ -55,6 +55,13 @@ class _SearchBodyState extends State<SearchBody> {
   }
 
   @override
+  void initState() {
+    final searchModel = Provider.of<SearchModel>(context, listen: false);
+    _onSearchTextChanged('', searchModel);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final searchModel = Provider.of<SearchModel>(context);
     return Column(

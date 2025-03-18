@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:alalamia_spices/app/exports/provider.dart';
+import 'package:alalamia_spices/firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -10,7 +11,9 @@ import 'app/services/prefs.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   FirebaseMessaging.instance.requestPermission();
   await FirebaseAppCheck.instance.activate(
       // webRecaptchaSiteKey: 'recaptcha-v3-site-key',
@@ -21,5 +24,5 @@ Future<void> main() async {
   await allTranslations.init();
   await FCMService.instance.init();
   HttpOverrides.global = MyHttpOverrides();
-  runApp(const AlalamiahApp());
+  runApp(AlalamiahApp());
 }

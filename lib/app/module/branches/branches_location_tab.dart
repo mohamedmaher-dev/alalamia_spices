@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 import 'dart:ui' as ui;
 import 'package:alalamia_spices/app/core/utils/empty_padding.dart';
@@ -19,14 +17,14 @@ import '../../core/utils/constants.dart';
 import 'package:alalamia_spices/app/exports/model.dart';
 
 class BranchesLocationTab extends StatefulWidget {
-  const BranchesLocationTab({Key? key}) : super(key: key);
+  const BranchesLocationTab({super.key});
 
   @override
   State<BranchesLocationTab> createState() => _BranchesLocationTabState();
 }
 
-class _BranchesLocationTabState extends State<BranchesLocationTab> with WidgetsBindingObserver{
-
+class _BranchesLocationTabState extends State<BranchesLocationTab>
+    with WidgetsBindingObserver {
   final Completer<GoogleMapController> _controller = Completer();
   Position? position;
   BitmapDescriptor? sourceIcon;
@@ -45,9 +43,12 @@ class _BranchesLocationTabState extends State<BranchesLocationTab> with WidgetsB
   String? long;
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
     ByteData data = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+        targetWidth: width);
     ui.FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+        .buffer
+        .asUint8List();
   }
 
   // List<AlalmiaBranches> allBranch = [
@@ -96,18 +97,20 @@ class _BranchesLocationTabState extends State<BranchesLocationTab> with WidgetsB
   // ];
   void setCustomMapPin() async {
     pinLocationIcon = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(devicePixelRatio: 2.0),
-        AppIcons.marker ,
+      const ImageConfiguration(devicePixelRatio: 2.0),
+      AppIcons.marker,
     );
   }
 
-
   Future _loadMapStyles() async {
-    _darkMapStyle  = await rootBundle.loadString('assets/map_style/darkMapStyle.json');
-    _lightMapStyle = await rootBundle.loadString('assets/map_style/lightMapStyle.json');
+    _darkMapStyle =
+        await rootBundle.loadString('assets/map_style/darkMapStyle.json');
+    _lightMapStyle =
+        await rootBundle.loadString('assets/map_style/lightMapStyle.json');
   }
+
   Future _setMapStyle(BuildContext context) async {
-    var themeChange = Provider.of<ThemeModel>(context , listen: false);
+    var themeChange = Provider.of<ThemeModel>(context, listen: false);
     final controller = await _controller.future;
     // final theme = WidgetsBinding.instance.window.platformBrightness;
     if (themeChange.darkTheme == true) {
@@ -117,14 +120,12 @@ class _BranchesLocationTabState extends State<BranchesLocationTab> with WidgetsB
     }
   }
 
-
   @override
   void didChangePlatformBrightness() {
     setState(() {
       _setMapStyle(context);
     });
   }
-
 
   @override
   void initState() {
@@ -144,10 +145,9 @@ class _BranchesLocationTabState extends State<BranchesLocationTab> with WidgetsB
     WidgetsBinding.instance.removeObserver(this);
   }
 
-
   void setSourceAndDestinationIcons() async {
     destinationIcon = await BitmapDescriptor.fromAssetImage(
-         ImageConfiguration(devicePixelRatio: 2.5, size: Size(100.w, 100.h)),
+        ImageConfiguration(devicePixelRatio: 2.5, size: Size(100.w, 100.h)),
         AppImages.logo);
   }
 
@@ -155,35 +155,34 @@ class _BranchesLocationTabState extends State<BranchesLocationTab> with WidgetsB
   Widget build(BuildContext context) {
     // var networkStatus = Provider.of<NetworkStatus>(context);
     return Consumer<ConnectivityNotifier>(
-      builder: (context , connection , child){
+      builder: (context, connection, child) {
         return Scaffold(
           backgroundColor: Theme.of(context).colorScheme.surface,
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(AppConstants.appBarHeight.h),
-            child: const CustomAppBar(
-              isHome: true,
-            ),
+            child: const CustomAppBar(),
           ),
           body: ChangeNotifierProvider<BranchesModel>(
             create: (context) => BranchesModel(context),
             child: Consumer<BranchesModel>(
-              builder: (context , model , child){
-                return  Stack(
+              builder: (context, model, child) {
+                return Stack(
                   children: <Widget>[
                     Positioned(
                         top: 0,
                         left: 0,
                         right: 0,
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20.0.w ,vertical: 20.0.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20.0.w, vertical: 20.0.h),
                           child: Text(
                             allTranslations.text('sitesAndBranches'),
-                            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                fontWeight: FontWeight.bold
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge!
+                                .copyWith(fontWeight: FontWeight.bold),
                           ),
-                        )
-                    ),
+                        )),
                     Positioned(
                       top: 70,
                       bottom: 10.0,
@@ -191,57 +190,135 @@ class _BranchesLocationTabState extends State<BranchesLocationTab> with WidgetsB
                       child: model.isLoading || model.loadingFailed
                           ? const CircularLoading()
                           : model.items.isEmpty
-                          ? Center(
-                        child: CustomMessage(
-                          message: allTranslations.text("noData"),
-                          appLottieIcon: AppLottie.noData,
-                          repeat: false,
-                        ),
-                      )
-                          : GoogleMap(
-                        compassEnabled: true,
-                        tiltGesturesEnabled: false,
-                        mapType: MapType.normal,
-                        markers: Set.from(allMarkers),
-                        initialCameraPosition: CameraPosition(
-                          target: position == null
-                              ?  LatLng(double.parse(model.branch.lat.toString()),double.parse(model.branch.long.toString()))
-                              : LatLng(position!.latitude, position!.longitude),
-                          zoom: 8,
-                        ),
-                        onMapCreated: (GoogleMapController controller) async {
-                          _controller.complete(controller);
-                          _setMapStyle(context);
-                          for (int i = 0; i < model.items.length; i++) {
-                            var markerIdval = model.items[i].id;
-                            final MarkerId markerId = MarkerId(markerIdval!);
-                            final Uint8List markerIcon = await getBytesFromAsset(AppIcons.marker, 120 );
-                            allMarkers.add(
-                                Marker(
-                                  markerId: markerId,
-                                  icon: BitmapDescriptor.fromBytes(markerIcon),
-                                  position: LatLng(double.parse(model.items[i].lat.toString()), double.parse(model.items[i].long.toString())),
-                                  onTap: () {
-                                    branchInfo = Branches(name: model.items[i].name,  email: model.items[i].email, phone: model.items[i].phone);
-                                    setState(() {
-                                      lat = model.items[i].lat;
-                                      long = model.items[i].long;
-                                      currentlySelectedPin = branchInfo;
-                                      pinPillPosition = 0;
-                                    });
-                                  },
-                                ));
-                            setState(() {
-                              markers[markerId] = marker;
-                            });
-                          }
-                        },
-                        onTap: (LatLng location) {
-                          setState(() {
-                            pinPillPosition = -100;
-                          });
-                        },
-                      ),
+                              ? Center(
+                                  child: CustomMessage(
+                                    message: allTranslations.text("noData"),
+                                    appLottieIcon: AppLottie.noData,
+                                    repeat: false,
+                                  ),
+                                )
+                              // : GoogleMap(
+                              //     compassEnabled: true,
+                              //     tiltGesturesEnabled: false,
+                              //     mapType: MapType.normal,
+                              //     markers: Set.from(allMarkers),
+                              //     initialCameraPosition: CameraPosition(
+                              //       target: position == null
+                              //           ? LatLng(
+                              //               double.parse(
+                              //                   model.branch.lat.toString()),
+                              //               double.parse(
+                              //                   model.branch.long.toString()))
+                              //           : LatLng(position!.latitude,
+                              //               position!.longitude),
+                              //       zoom: 8,
+                              //     ),
+                              //     onMapCreated:
+                              //         (GoogleMapController controller) async {
+                              //       _controller.complete(controller);
+                              //       _setMapStyle(context);
+                              //       for (int i = 0;
+                              //           i < model.items.length;
+                              //           i++) {
+                              //         var markerIdval = model.items[i].id;
+                              //         final MarkerId markerId =
+                              //             MarkerId(markerIdval!);
+                              //         final Uint8List markerIcon =
+                              //             await getBytesFromAsset(
+                              //                 AppIcons.marker, 120);
+                              //         allMarkers.add(Marker(
+                              //           markerId: markerId,
+                              //           icon: BitmapDescriptor.fromBytes(
+                              //               markerIcon),
+                              //           position: LatLng(
+                              //               double.parse(
+                              //                   model.items[i].lat.toString()),
+                              //               double.parse(model.items[i].long
+                              //                   .toString())),
+                              //           onTap: () {
+                              //             branchInfo = Branches(
+                              //                 name: model.items[i].name,
+                              //                 email: model.items[i].email,
+                              //                 phone: model.items[i].phone);
+                              //             setState(() {
+                              //               lat = model.items[i].lat;
+                              //               long = model.items[i].long;
+                              //               currentlySelectedPin = branchInfo;
+                              //               pinPillPosition = 0;
+                              //             });
+                              //           },
+                              //         ));
+                              //         setState(() {
+                              //           markers[markerId] = marker;
+                              //         });
+                              //       }
+                              //     },
+                              //     onTap: (LatLng location) {
+                              //       setState(() {
+                              //         pinPillPosition = -100;
+                              //       });
+                              //     },
+                              //   ),
+                              : ListView.builder(
+                                  itemCount: model.items.length,
+                                  itemBuilder: (context, index) => Card(
+                                    child: ExpansionTile(
+                                      leading: Icon(
+                                        Icons.location_on_outlined,
+                                      ),
+                                      title: Text(
+                                        "${model.items[index].name}",
+                                      ),
+                                      subtitle: Text(
+                                        'اسم الفرع',
+                                      ),
+                                      children: [
+                                        ListTile(
+                                          leading: Icon(
+                                            Icons.phone,
+                                          ),
+                                          title: Text(
+                                            locale: Locale("en"),
+                                            style: TextStyle(
+                                              fontFamily: "cairo",
+                                            ),
+                                            "${model.items[index].phone}",
+                                          ),
+                                          subtitle: Text(
+                                            'رقم الهاتف',
+                                          ),
+                                        ),
+                                        // ListTile(
+                                        //   leading: Icon(
+                                        //     Icons.email,
+                                        //   ),
+                                        //   title: Text(
+                                        //     "${model.items[index].email}",
+                                        //   ),
+                                        //   subtitle: Text(
+                                        //     'البريد الالكتروني',
+                                        //   ),
+                                        // ),
+                                        FilledButton(
+                                            onPressed: () {
+                                              branchInfo = Branches(
+                                                  name: model.items[index].name,
+                                                  email:
+                                                      model.items[index].email,
+                                                  phone:
+                                                      model.items[index].phone);
+                                              lat = model.items[index].lat;
+                                              long = model.items[index].long;
+                                              currentlySelectedPin = branchInfo;
+                                              MapsLauncher.launchCoordinates(
+                                                  double.parse(lat!),
+                                                  double.parse(long!));
+                                            },
+                                            child: Text("الذهاب للفرع"))
+                                      ],
+                                    ),
+                                  ),
+                                ),
                     ),
                     MapPinPillComponent(
                       pinPillPosition: pinPillPosition,
@@ -251,8 +328,8 @@ class _BranchesLocationTabState extends State<BranchesLocationTab> with WidgetsB
                         //
                         // }
 
-                        MapsLauncher.launchCoordinates(double.parse(lat!) , double.parse(long!));
-
+                        MapsLauncher.launchCoordinates(
+                            double.parse(lat!), double.parse(long!));
                       },
                     )
                   ],
@@ -260,9 +337,8 @@ class _BranchesLocationTabState extends State<BranchesLocationTab> with WidgetsB
               },
             ),
           ),
-          bottomNavigationBar: connection.hasConnection
-              ? 0.ph
-              : const NoInternetMessage(),
+          bottomNavigationBar:
+              connection.hasConnection ? 0.ph : const NoInternetMessage(),
         );
       },
     );

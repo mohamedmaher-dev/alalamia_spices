@@ -4,13 +4,12 @@ import 'package:alalamia_spices/app/module/auth/forgot_password/forgot_password_
 import 'package:alalamia_spices/app/module/auth/phone/phone_screen.dart';
 import 'package:alalamia_spices/app/module/auth/sign_up/sign_up_tab.dart';
 import 'package:alalamia_spices/app/module/cart/cart_tab.dart';
-import 'package:alalamia_spices/app/module/splash_screen/splash_screen.dart';
+import 'package:alalamia_spices/app/module/intro_screen/intro_screen.dart';
 import 'package:flutter/material.dart';
 import '../../data/model/new_arrival.dart';
 import '../../module/onboarding/onboarding_screen.dart';
 import '../../module/product_details/product_details_screen.dart';
 import '../../module/start/start.dart';
-
 
 class Routes {
   Routes._();
@@ -26,20 +25,17 @@ class Routes {
   static const String cartScreen = '/cartScreen';
   static const String onboardingScreen = '/onboardingScreen';
 
-
   static final routes = <String, WidgetBuilder>{
     startScreen: (BuildContext context) => const StartScreen(),
-    appConfigScreen : (BuildContext context) => const AppConfigScreen(),
-    splashScreen : (BuildContext context) => const SplashScreen(),
-    authTapsScreen : (BuildContext context) => const AuthTabsScreen(),
-    onboardingScreen : (BuildContext context) => const OnBoardingScreen(),
-
-
+    appConfigScreen: (BuildContext context) => const AppConfigScreen(),
+    splashScreen: (BuildContext context) => const IntroScreen(),
+    authTapsScreen: (BuildContext context) => const AuthTabsScreen(),
+    onboardingScreen: (BuildContext context) => const OnBoardingScreen(),
 
     /// phone screen
-    phoneScreen: (BuildContext context) =>
-        PhoneScreen(
-            isFromForgotPasswordScreen: ModalRoute.of(context)!.settings.arguments as bool),
+    phoneScreen: (BuildContext context) => PhoneScreen(
+        isFromForgotPasswordScreen:
+            ModalRoute.of(context)!.settings.arguments as bool),
 
     /// verification code screen
     // verificationCodeScreen: (BuildContext context) =>
@@ -49,28 +45,21 @@ class Routes {
     //       isResetPassword: true,
     //     ),
 
-
     /// forget password screen
-    forgetPasswordScreen: (BuildContext context) =>
-        ForgotPasswordScreen(
-            phoneNumber: ModalRoute.of(context)!.settings.arguments as String),
-
+    forgetPasswordScreen: (BuildContext context) => ForgotPasswordScreen(
+        phoneNumber: ModalRoute.of(context)!.settings.arguments as String),
 
     /// sign up screen
-    signUpScreen: (BuildContext context) =>
-        SignUpTab(
-            phoneNumber: ModalRoute.of(context)!.settings.arguments as String),
+    signUpScreen: (BuildContext context) => SignUpTab(
+        phoneNumber: ModalRoute.of(context)!.settings.arguments as String),
 
     /// product details screen
-    productDetailsScreen: (BuildContext context) =>
-        ProductDetailsScreen(
-            product: ModalRoute.of(context)!.settings.arguments as Product),
+    productDetailsScreen: (BuildContext context) => ProductDetailsScreen(
+        product: ModalRoute.of(context)!.settings.arguments as Product),
 
     /// cart screen
-    cartScreen : (BuildContext context) =>
-        CartTab(
-            isFromProductDetails: ModalRoute.of(context)!.settings.arguments as bool),
-
-
+    cartScreen: (BuildContext context) => CartTab(
+        isFromProductDetails:
+            ModalRoute.of(context)!.settings.arguments as bool),
   };
 }

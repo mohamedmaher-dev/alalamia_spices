@@ -1,5 +1,6 @@
 import 'package:alalamia_spices/app/core/utils/constants.dart';
 import 'package:alalamia_spices/app/core/utils/empty_padding.dart';
+import 'package:alalamia_spices/app/module/product_details/product_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -83,15 +84,87 @@ class CustomProductCard extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 children: [
                   /// image
-                  Padding(
-                    padding: EdgeInsets.only(top: 25.h),
-                    child: SizedBox(
-                        height: 220.h,
-                        width: 167.w,
-                        child: CustomCachedNetworkImage(
-                          fit: BoxFit.cover,
-                          imageUrl: image,
-                        )),
+                  Stack(
+                    alignment: Alignment.bottomLeft,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: 25.h),
+                        child: SizedBox(
+                          height: 220.h,
+                          width: 167.w,
+                          child: CustomCachedNetworkImage(
+                            fit: BoxFit.cover,
+                            imageUrl: image,
+                          ),
+                        ),
+                      ),
+                      if (status == true)
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: IconButton.filled(
+                            style: ButtonStyle(
+                              side: WidgetStatePropertyAll(
+                                BorderSide(
+                                  color: Colors.black,
+                                  width: 1,
+                                ),
+                              ),
+                              shape: WidgetStatePropertyAll(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    AppConstants.defaultBorderRadius.w,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            iconSize: 20.h,
+                            onPressed: () async {
+                              // try {
+                              //   String myString = selectedAdds.toString();
+                              //   RegExp regex = RegExp(r'\[(.*?)\]');
+                              //   Iterable<RegExpMatch> matches =
+                              //       regex.allMatches(myString);
+
+                              //   for (RegExpMatch match in matches) {
+                              //     extractedString = match.group(1);
+                              //   }
+                              //   await productDetailsProvider.addToCart(
+                              //     context,
+                              //     pricesList[0],
+                              //     product,
+                              //     extractedString.toString(),
+                              //     false,
+                              //   );
+
+                              //   CustomToast.showFlutterToast(
+                              //     context: context,
+                              //     message: 'تم إضافة المنتج إلى السلة',
+                              //     toastLength: Toast.LENGTH_SHORT,
+                              //   );
+                              //   debugPrint("adding to cart successfully");
+                              // } catch (error) {
+                              //   debugPrint("error adding to cart $error");
+                              //   CustomToast.showFlutterToast(
+                              //     context: context,
+                              //     message: 'لم يتم اضافة المنتج',
+                              //     toastLength: Toast.LENGTH_SHORT,
+                              //   );
+                              // }
+
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) => ProductDetailsScreen(
+                                  product: product,
+                                  isFull: false,
+                                ),
+                              );
+                            },
+                            icon: const Icon(
+                              Icons.add_shopping_cart_outlined,
+                            ),
+                          ),
+                        )
+                    ],
                   ),
 
                   10.ph,
@@ -302,47 +375,6 @@ class CustomProductCard extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              if (status == true || pricesList.isNotEmpty)
-                                Expanded(
-                                  child: IconButton(
-                                    onPressed: () async {
-                                      try {
-                                        String myString =
-                                            selectedAdds.toString();
-                                        RegExp regex = RegExp(r'\[(.*?)\]');
-                                        Iterable<RegExpMatch> matches =
-                                            regex.allMatches(myString);
-
-                                        for (RegExpMatch match in matches) {
-                                          extractedString = match.group(1);
-                                        }
-                                        await productDetailsProvider.addToCart(
-                                          context,
-                                          pricesList[0],
-                                          product,
-                                          extractedString.toString(),
-                                          false,
-                                        );
-                                        // facebookAppEvents.logAddToCart(
-                                        //   id: product.id.toString(),
-                                        //   type: 'product',
-                                        //   price: double.parse(
-                                        //       pricesList[0].price.toString()),
-                                        //   currency: "TRY",
-                                        // );
-
-                                        debugPrint(
-                                            "adding to cart successfully");
-                                      } catch (error) {
-                                        debugPrint(
-                                            "error adding to cart $error");
-                                      }
-                                    },
-                                    icon: const Icon(
-                                      Icons.add_shopping_cart_outlined,
-                                    ),
-                                  ),
-                                )
                             ],
                           ),
                         ),

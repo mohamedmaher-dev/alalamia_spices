@@ -485,10 +485,12 @@ import '../cart/cart_tab.dart';
 String cartID = "";
 
 class ProductDetailsScreen extends StatefulWidget {
+  final bool isFull;
   final Product product;
   const ProductDetailsScreen({
     super.key,
     required this.product,
+    this.isFull = true,
   });
 
   @override
@@ -573,16 +575,20 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             return SafeArea(
               child: Scaffold(
                   backgroundColor: Theme.of(context).colorScheme.surface,
-                  appBar: PreferredSize(
-                    preferredSize: Size.fromHeight(AppConstants.appBarHeight.h),
-                    child: const CustomAppBar(),
-                  ),
+                  appBar: widget.isFull
+                      ? PreferredSize(
+                          preferredSize:
+                              Size.fromHeight(AppConstants.appBarHeight.h),
+                          child: const CustomAppBar(),
+                        )
+                      : null,
                   body: ListView(
                     children: [
                       /// header with image swiper
-                      ProductDetailsHeader(
-                        product: widget.product,
-                      ),
+                      if (widget.isFull)
+                        ProductDetailsHeader(
+                          product: widget.product,
+                        ),
 
                       3.ph,
 
@@ -937,26 +943,28 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       5.ph,
 
                       /// user rating
-                      ProductDetailsRating(
-                        overAllAssessment: double.parse(
-                                widget.product.overallAssessment.toString())
-                            .round()
-                            .toString(),
-                        numberResident: double.parse(
-                                widget.product.numberResidents.toString())
-                            .round()
-                            .toString(),
-                        productId: widget.product.id.toString(),
-                      ),
+                      if (widget.isFull)
+                        ProductDetailsRating(
+                          overAllAssessment: double.parse(
+                                  widget.product.overallAssessment.toString())
+                              .round()
+                              .toString(),
+                          numberResident: double.parse(
+                                  widget.product.numberResidents.toString())
+                              .round()
+                              .toString(),
+                          productId: widget.product.id.toString(),
+                        ),
 
                       /// end of users ratings
 
                       5.ph,
 
                       /// similarProducts
-                      SimilarProduct(
-                        productId: widget.product.id.toString(),
-                      ),
+                      if (widget.isFull)
+                        SimilarProduct(
+                          productId: widget.product.id.toString(),
+                        ),
                     ],
                   ),
                   bottomNavigationBar: ContinuePurchasingButton(
