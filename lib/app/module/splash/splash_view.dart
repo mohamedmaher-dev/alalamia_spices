@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:alalamia_spices/app/data/providers/appModel.dart';
+import 'package:alalamia_spices/app/data/providers/countries_model.dart';
 import 'package:alalamia_spices/app/module/app_config/app_config_screen.dart';
 import 'package:alalamia_spices/app/module/app_config/provider/app_config_provider.dart';
 import 'package:alalamia_spices/app/module/intro_screen/intro_screen.dart';

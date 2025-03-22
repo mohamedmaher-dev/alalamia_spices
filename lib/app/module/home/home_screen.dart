@@ -2,6 +2,7 @@ import 'package:alalamia_spices/app/core/utils/constants.dart';
 import 'package:alalamia_spices/app/core/utils/empty_padding.dart';
 import 'package:alalamia_spices/app/exports/provider.dart';
 import 'package:alalamia_spices/app/exports/widget.dart';
+import 'package:alalamia_spices/app/module/app_config/app_config_screen.dart';
 import 'package:alalamia_spices/app/module/home/widget/home_note.dart';
 import 'package:alalamia_spices/app/module/home/widget/index.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     var noteModel = Provider.of<NoteModel>(context);
     // var networkStatus = Provider.of<NetworkStatus>(context);
-
     return ChangeNotifierProvider<ConnectivityNotifier>(
       create: (context) => ConnectivityNotifier(),
       child: Consumer<ConnectivityNotifier>(

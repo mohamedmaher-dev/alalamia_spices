@@ -140,6 +140,7 @@
 //   }
 // }
 
+import 'package:alalamia_spices/app/module/app_config/app_config_screen.dart';
 import 'package:alalamia_spices/app/module/branches/branches_location_tab.dart';
 import 'package:alalamia_spices/app/module/user/notifications/notifications_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -230,6 +231,8 @@ class CustomAppBar extends StatelessWidget {
   }
 
   Widget _buildImageCountry(BuildContext context) {
+    var countriesModel = Provider.of<CountriesModel>(context, listen: false);
+    selectCountry(context, countriesModel);
     final connection = Provider.of<ConnectivityNotifier>(context);
     return connection.hasConnection ? const CountryImageAppBar() : 0.ph;
   }

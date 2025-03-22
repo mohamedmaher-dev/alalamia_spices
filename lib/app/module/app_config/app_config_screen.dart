@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:io';
+
 import 'package:alalamia_spices/app/core/utils/empty_padding.dart';
 import 'package:alalamia_spices/app/module/app_config/provider/app_config_provider.dart';
 import 'package:alalamia_spices/app/exports/widget.dart';
@@ -10,7 +12,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../../core/utils/route.dart';
 import '../../core/values/app_images.dart';
@@ -21,6 +22,8 @@ import '../../services/screen_navigation_service.dart';
 String? countryName;
 String? countryImage;
 String countryId = "";
+bool isSwitched = false;
+int selectedCountry = -1;
 
 class AppConfigScreen extends StatefulWidget {
   const AppConfigScreen({super.key});
@@ -30,9 +33,6 @@ class AppConfigScreen extends StatefulWidget {
 }
 
 class _AppConfigScreenState extends State<AppConfigScreen> {
-  bool isSwitched = false;
-  int selectedCountry = -1;
-
   @override
   void initState() {
     super.initState();
@@ -49,53 +49,6 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
       create: (context) => ConnectivityNotifier(),
       child: Consumer<ConnectivityNotifier>(
         builder: (context, connection, child) {
-          void selectCountryIfMethod(Placemark place) {
-            if (place.isoCountryCode == 'SA') {
-              selectedCountry = 0;
-              countryName = 'السعودية - KSA';
-              countryId = '3';
-              countryImage =
-                  'https://api.alalamiastore.com/storage/country/360/Alalamia_1715783858.png';
-              countriesModel.saveCountryCode(
-                initialCountry: 'SA',
-                dialCode: '550197770',
-                countryId: countryId,
-              );
-            } else {
-              selectedCountry = 1;
-              countryName = 'الإمارات - UAE';
-              countryId = '2';
-              countryImage =
-                  'https://api.alalamiastore.com/storage/country/360/Alalamia_1715783396.png';
-              countriesModel.saveCountryCode(
-                initialCountry: 'AE',
-                dialCode: '503360777',
-                countryId: countryId,
-              );
-            }
-          }
-
-          Future<bool> selectCountry(BuildContext context) async {
-            bool permission = await checkPermission(context);
-            if (permission) {
-              Position position = await Geolocator.getCurrentPosition();
-              List<Placemark> placemarks = await placemarkFromCoordinates(
-                  position.latitude, position.longitude);
-              Placemark place = placemarks.first;
-              selectCountryIfMethod(place);
-              countriesModel.saveCountryDetails(
-                id: countryId,
-                name: countryName!,
-                image: countryImage!,
-              );
-              countriesModel.getCountryCode();
-              countriesModel.getCountryDetails();
-              return true;
-            } else {
-              return false;
-            }
-          }
-
           return SafeArea(
             child: Scaffold(
               backgroundColor: Theme.of(context).colorScheme.surface,
@@ -189,12 +142,10 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
                               .copyWith(fontSize: 18.sp),
                           buttonColor: Theme.of(context).secondaryHeaderColor,
                           onTap: () async {
-                            final bool isSelected =
-                                await selectCountry(context);
-                            if (isSelected) {
-                              pushNamedReplacement(
-                                  context, Routes.onboardingScreen);
-                            }
+                            await selectCountry(context, countriesModel);
+                            print("====================== $countryName");
+                            pushNamedReplacement(
+                                context, Routes.onboardingScreen);
                           }),
                     )
                   : const NoInternetMessage(),
@@ -206,27 +157,34 @@ class _AppConfigScreenState extends State<AppConfigScreen> {
   }
 }
 
-Future<bool> checkPermission(BuildContext context) async {
+Future<bool> _checkLocation(BuildContext context) async {
   bool serviceEnabled;
-  LocationPermission permission;
-  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  serviceEnabled = await _checkLocationService();
   if (serviceEnabled) {
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.deniedForever) {
-      await openAppSettings();
-      permission = await Geolocator.checkPermission();
-      return await _perrmissionToBool(permission);
-    } else if (permission == LocationPermission.denied) {
-      await Geolocator.openAppSettings();
-      permission = await Geolocator.requestPermission();
-      return await _perrmissionToBool(permission);
-    } else {
-      return true;
-    }
+    return await _checkLocationPermission();
   } else {
-    await Geolocator.openLocationSettings();
+    if (Platform.isAndroid) {
+      await Geolocator.openLocationSettings();
+    }
     return false;
   }
+}
+
+Future<bool> _checkLocationPermission() async {
+  LocationPermission permission;
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.deniedForever) {
+    return false;
+  } else if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    return await _perrmissionToBool(permission);
+  } else {
+    return true;
+  }
+}
+
+Future<bool> _checkLocationService() async {
+  return await Geolocator.isLocationServiceEnabled();
 }
 
 Future<bool> _perrmissionToBool(LocationPermission permission) async {
@@ -235,5 +193,54 @@ Future<bool> _perrmissionToBool(LocationPermission permission) async {
     return false;
   } else {
     return true;
+  }
+}
+
+Future<void> selectCountry(
+    BuildContext context, CountriesModel countriesModel) async {
+  bool location = await _checkLocation(context);
+  if (location) {
+    Position position = await Geolocator.getCurrentPosition();
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(position.latitude, position.longitude);
+    Placemark place = placemarks.first;
+    selectCountryIfMethod(place.isoCountryCode!, countriesModel);
+    countriesModel.saveCountryDetails(
+      id: countryId,
+      name: countryName!,
+      image: countryImage!,
+    );
+    countriesModel.getCountryCode();
+    countriesModel.getCountryDetails();
+  } else {
+    selectCountryIfMethod('AE', countriesModel);
+    countriesModel.getCountryCode();
+    countriesModel.getCountryDetails();
+  }
+}
+
+void selectCountryIfMethod(String? countryCode, CountriesModel countriesModel) {
+  if (countryCode == 'SA') {
+    selectedCountry = 0;
+    countryName = 'السعودية - KSA';
+    countryId = '3';
+    countryImage =
+        'https://api.alalamiastore.com/storage/country/360/Alalamia_1715783858.png';
+    countriesModel.saveCountryCode(
+      initialCountry: 'SA',
+      dialCode: '550197770',
+      countryId: countryId,
+    );
+  } else {
+    selectedCountry = 1;
+    countryName = 'الإمارات - UAE';
+    countryId = '2';
+    countryImage =
+        'https://api.alalamiastore.com/storage/country/360/Alalamia_1715783396.png';
+    countriesModel.saveCountryCode(
+      initialCountry: 'AE',
+      dialCode: '503360777',
+      countryId: countryId,
+    );
   }
 }

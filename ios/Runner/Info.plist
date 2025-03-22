@@ -50,9 +50,9 @@
     	<string>This app needs access to location when in the background.</string> -->
 		<key>NSLocationWhenInUseUsageDescription</key>
 		<string>This app needs access to location when open, to determine whether you are in Saudi Arabia or outside it. This helps us display the appropriate branch locations and product prices for your region. It is secure and private</string>
-		<!-- <key>NSMicrophoneUsageDescription</key>
+		<key>NSMicrophoneUsageDescription</key>
 		<string>Alalamiah would like to take a picture to enhance your description. Your photos won't be shared without your permission.
-		</string> -->
+		</string>
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>Alalamiah would like to access your photo gallery to enhance your description.Your photos won't be shared without your permission.
 		</string>
