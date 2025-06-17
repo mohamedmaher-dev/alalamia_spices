@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:alalamia_spices/app/core/utils/empty_padding.dart';
 import 'package:alalamia_spices/app/core/values/app_lottie.dart';
 import 'package:alalamia_spices/app/exports/widget.dart';
+import 'package:alalamia_spices/app/global_widgets/currency_view.dart';
 import 'package:alalamia_spices/app/module/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -620,16 +621,9 @@ class _CartTabState extends State<CartTab> {
                       fontFamily: "cairo"),
                 ),
                 5.pw,
-                Center(
-                  child: Text(
-                    "${cartModel.items[0].currency}",
-                    style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 10.sp,
-                        color: Theme.of(context).colorScheme.secondary,
-                        fontFamily: "cairo"),
-                  ),
-                )
+                CurrencyView(
+                    currency: cartModel.items[0].currency,
+                    color: Theme.of(context).colorScheme.secondary)
               ],
             ),
           ),

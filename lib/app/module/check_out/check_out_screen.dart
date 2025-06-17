@@ -1,5 +1,8 @@
+// ignore_for_file: unrelated_type_equality_checks
+
 import 'package:alalamia_spices/app/core/utils/empty_padding.dart';
 import 'package:alalamia_spices/app/data/model/aramex_shipment.dart';
+import 'package:alalamia_spices/app/data/model/shipping_type.dart';
 import 'package:alalamia_spices/app/exports/services.dart';
 import 'package:alalamia_spices/app/global_widgets/svg_picture_assets.dart';
 import 'package:alalamia_spices/app/module/bill/bill_screen.dart';
@@ -186,6 +189,8 @@ class _SubCheckOutScreenState extends State<SubCheckOutScreen> {
     }
   }
 
+  Set<int> shippingTypesSet = {0};
+
   @override
   Widget build(BuildContext context) {
     shippingTypeModel.getShippingList(context);
@@ -249,108 +254,202 @@ class _SubCheckOutScreenState extends State<SubCheckOutScreen> {
                                             .bodyLarge,
                                       ),
                                       15.ph,
-                                      ListView.separated(
-                                        itemCount: shippingTypeModel
-                                            .shippingTypeList.length,
-                                        shrinkWrap: true,
-                                        primary: false,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        separatorBuilder: (context, _) => 5.ph,
-                                        itemBuilder: (context, index) {
-                                          final shippingType = shippingTypeModel
-                                              .shippingTypeList[index];
-
-                                          if (shippingType.name ==
-                                                  allTranslations
-                                                      .text("aramex") &&
-                                              userModel.aramexStatus ==
-                                                  "false") {
-                                            return const SizedBox.shrink();
-                                          }
-                                          return Container(
-                                            padding: EdgeInsets.all(5.w),
-                                            decoration: BoxDecoration(
+                                      Center(
+                                        child: SegmentedButton<int>(
+                                          style: ButtonStyle(
+                                            shape: WidgetStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(
                                                         AppConstants
                                                             .defaultBorderRadius
                                                             .w),
-                                                border: Border.all(
-                                                    color:
-                                                        _selectedDeliveryType ==
-                                                                shippingType
-                                                                    .name
-                                                            ? Theme.of(context)
-                                                                .colorScheme
-                                                                .secondary
-                                                            : Colors
-                                                                .transparent,
-                                                    width: 2.w)),
-                                            child: Column(
-                                              children: [
-                                                _buildDeliveryTypeCard(
-                                                  title: shippingType.name
-                                                      .toString(),
-                                                  icon: shippingType.icon
-                                                      .toString(),
-                                                  value: shippingType.name
-                                                      .toString(),
-                                                  size:
-                                                      index == 1 ? 10.w : 26.w,
-                                                  padding:
-                                                      index == 1 ? 17.w : 12.w,
-                                                  onTap: () {
-                                                    setState(() {
-                                                      _selectedDeliveryType =
-                                                          shippingTypeModel
-                                                              .shippingTypeList[
-                                                                  index]
-                                                              .name;
-                                                    });
-                                                    billProvider
-                                                            .currentShippingType =
-                                                        _selectedDeliveryType!;
-                                                  },
-                                                ),
-                                                AnimatedSwitcher(
-                                                  duration: const Duration(
-                                                      milliseconds: 300),
-                                                  transitionBuilder:
-                                                      (child, animation) {
-                                                    return SlideTransition(
-                                                      position: Tween<Offset>(
-                                                        begin: const Offset(
-                                                            0.0, 0.1),
-                                                        end: Offset.zero,
-                                                      ).animate(animation),
-                                                      child: FadeTransition(
-                                                        opacity: animation,
-                                                        child: child,
-                                                      ),
-                                                    );
-                                                  },
-                                                  child:
-                                                      _selectedDeliveryType ==
-                                                              shippingType.name
-                                                          ? Padding(
-                                                              padding: EdgeInsets
-                                                                  .only(
-                                                                      top: 10.0
-                                                                          .h),
-                                                              child: _buildShippingDetails(
-                                                                  context,
+                                              ),
+                                            ),
+                                          ),
+                                          segments: const <ButtonSegment<int>>[
+                                            ButtonSegment<int>(
+                                              value: 0,
+                                              label: Text('داخل الدولة'),
+                                            ),
+                                            ButtonSegment<int>(
+                                              value: 1,
+                                              label: Text('خارج الدولة'),
+                                            ),
+                                          ],
+                                          selected: shippingTypesSet,
+                                          onSelectionChanged: (Set<int> value) {
+                                            print(
+                                                "=========================== $chosenLocationName");
+                                            setState(() {
+                                              shippingTypesSet = value;
+                                              if (shippingTypesSet.first == 1) {
+                                                _selectedDeliveryType =
+                                                    shippingTypeModel
+                                                        .shippingTypeList[1]
+                                                        .name;
+                                                billProvider
+                                                        .currentShippingType =
+                                                    _selectedDeliveryType!;
+                                              }
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      15.ph,
+                                      if (shippingTypesSet.first == 0)
+                                        ListView.separated(
+                                          itemCount: shippingTypeModel
+                                              .shippingTypeList.length,
+                                          shrinkWrap: true,
+                                          primary: false,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          separatorBuilder: (context, _) =>
+                                              5.ph,
+                                          itemBuilder: (context, index) {
+                                            final shippingType =
+                                                shippingTypeModel
+                                                    .shippingTypeList[index];
+
+                                            if (shippingType.name ==
+                                                    allTranslations
+                                                        .text("aramex") &&
+                                                userModel.aramexStatus ==
+                                                    "false") {
+                                              return const SizedBox.shrink();
+                                            }
+                                            return Visibility(
+                                              visible: getShippingType(
+                                                  shippingTypeModel
+                                                      .shippingTypeList,
+                                                  index,
+                                                  userModel,
+                                                  billProvider),
+                                              child: Container(
+                                                padding: EdgeInsets.all(5.w),
+                                                decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius
+                                                        .circular(AppConstants
+                                                            .defaultBorderRadius
+                                                            .w),
+                                                    border: Border.all(
+                                                        color:
+                                                            _selectedDeliveryType ==
+                                                                    shippingType
+                                                                        .name
+                                                                ? Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .secondary
+                                                                : Colors
+                                                                    .transparent,
+                                                        width: 2.w)),
+                                                child: Column(
+                                                  children: [
+                                                    _buildDeliveryTypeCard(
+                                                      title: shippingType.name
+                                                          .toString(),
+                                                      icon: shippingType.icon
+                                                          .toString(),
+                                                      value: shippingType.name
+                                                          .toString(),
+                                                      size: index == 1
+                                                          ? 10.w
+                                                          : 26.w,
+                                                      padding: index == 1
+                                                          ? 17.w
+                                                          : 12.w,
+                                                      onTap: () {
+                                                        setState(() {
+                                                          _selectedDeliveryType =
+                                                              shippingTypeModel
+                                                                  .shippingTypeList[
+                                                                      index]
+                                                                  .name;
+                                                        });
+                                                        billProvider
+                                                                .currentShippingType =
+                                                            _selectedDeliveryType!;
+                                                      },
+                                                    ),
+                                                    AnimatedSwitcher(
+                                                      duration: const Duration(
+                                                          milliseconds: 300),
+                                                      transitionBuilder:
+                                                          (child, animation) {
+                                                        return SlideTransition(
+                                                          position:
+                                                              Tween<Offset>(
+                                                            begin: const Offset(
+                                                                0.0, 0.1),
+                                                            end: Offset.zero,
+                                                          ).animate(animation),
+                                                          child: FadeTransition(
+                                                            opacity: animation,
+                                                            child: child,
+                                                          ),
+                                                        );
+                                                      },
+                                                      child:
+                                                          _selectedDeliveryType ==
                                                                   shippingType
                                                                       .name
-                                                                      .toString()),
-                                                            )
-                                                          : 0.ph,
+                                                              ? Padding(
+                                                                  padding: EdgeInsets
+                                                                      .only(
+                                                                          top: 10.0
+                                                                              .h),
+                                                                  child: _buildShippingDetails(
+                                                                      canChangeCountry:
+                                                                          false,
+                                                                      context,
+                                                                      shippingType
+                                                                          .name
+                                                                          .toString()),
+                                                                )
+                                                              : 0.ph,
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      if (shippingTypesSet.first == 1)
+                                        Column(
+                                          children: [
+                                            _buildDeliveryTypeCard(
+                                              title: shippingTypeModel
+                                                  .shippingTypeList[1].name
+                                                  .toString(),
+                                              icon: shippingTypeModel
+                                                  .shippingTypeList[1].icon
+                                                  .toString(),
+                                              value: shippingTypeModel
+                                                  .shippingTypeList[1].name
+                                                  .toString(),
+                                              size: 1 == 1 ? 10.w : 26.w,
+                                              padding: 1 == 1 ? 17.w : 12.w,
+                                              onTap: () {
+                                                setState(() {
+                                                  _selectedDeliveryType =
+                                                      shippingTypeModel
+                                                          .shippingTypeList[1]
+                                                          .name;
+                                                });
+                                                billProvider
+                                                        .currentShippingType =
+                                                    _selectedDeliveryType!;
+                                              },
                                             ),
-                                          );
-                                        },
-                                      ),
+                                            _buildShippingDetails(
+                                                canChangeCountry: true,
+                                                context,
+                                                allTranslations.text("aramex")),
+                                          ],
+                                        ),
                                     ],
                                   ),
                                 ),
@@ -435,7 +534,8 @@ class _SubCheckOutScreenState extends State<SubCheckOutScreen> {
     );
   }
 
-  Widget _buildShippingDetails(BuildContext context, String shippingTypeName) {
+  Widget _buildShippingDetails(BuildContext context, String shippingTypeName,
+      {required bool canChangeCountry}) {
     if (shippingTypeName == allTranslations.text("normalDelivery")) {
       return freeShippingMessage(context);
     }
@@ -443,7 +543,7 @@ class _SubCheckOutScreenState extends State<SubCheckOutScreen> {
     //   return dateAndTimePicker(context);
     // }
     else if (shippingTypeName == allTranslations.text("aramex")) {
-      return aramexForm(context);
+      return aramexForm(context, canChangeCountry);
     } else {
       return 0.ph;
     }
@@ -572,7 +672,7 @@ class _SubCheckOutScreenState extends State<SubCheckOutScreen> {
   //   );
   // }
 
-  Widget aramexForm(BuildContext context) {
+  Widget aramexForm(BuildContext context, bool canChangeCountry) {
     return Padding(
       padding: EdgeInsets.all(10.w),
       child: Column(
@@ -597,6 +697,7 @@ class _SubCheckOutScreenState extends State<SubCheckOutScreen> {
           ),
           15.ph,
           AramexDetails(
+            canChangeCountry: canChangeCountry,
             selectedAramex:
                 _selectedDeliveryType == allTranslations.text("aramex"),
           )
@@ -652,5 +753,31 @@ class _SubCheckOutScreenState extends State<SubCheckOutScreen> {
         ),
       ),
     );
+  }
+
+  bool getShippingTypeDone = false;
+  bool getShippingType(List<ShippingTypeData> shippingTypeList, int index,
+      UserModel userModel, BillProvider billProvider) {
+    if (shippingTypeList[index].name == allTranslations.text("aramex")) {
+      if (userModel.countryId == "3") {
+        if (!getShippingTypeDone) {
+          _selectedDeliveryType =
+              shippingTypeModel.shippingTypeList[index].name;
+          billProvider.currentShippingType = _selectedDeliveryType!;
+        }
+        getShippingTypeDone = true;
+        return true;
+      } else {
+        return false;
+      }
+    } else if (shippingTypeList[index].name ==
+        allTranslations.text("normalDelivery")) {
+      if (userModel.countryId == "3") {
+        return false;
+      } else {
+        return true;
+      }
+    }
+    return false;
   }
 }

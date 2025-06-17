@@ -2,6 +2,7 @@ import 'package:alalamia_spices/app/exports/provider.dart';
 import 'package:alalamia_spices/app/exports/widget.dart';
 import 'package:alalamia_spices/app/module/offers/offer_tab.dart';
 import 'package:alalamia_spices/app/module/user/user_screen/user_screen.dart';
+import 'package:alalamia_spices/app/module/user/user_screen/widget/index.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -110,6 +111,7 @@ class _StartScreenState extends State<StartScreen> {
         PopupDialog.showPopupDialog(context);
       });
     });
+    selectCountry(context, Provider.of<CountriesModel>(context, listen: false));
   }
 
   List<Widget> _buildScreens() {
@@ -143,7 +145,7 @@ class _StartScreenState extends State<StartScreen> {
           height: kBottomNavigationBarHeight,
           index: _currentIndex,
           backgroundColor: Colors.transparent,
-          color: Theme.of(context).colorScheme.secondary,
+          color: Color(0xFF927146),
           buttonBackgroundColor: Theme.of(context).colorScheme.secondary,
           animationCurve: Curves.linear,
           items: <Widget>[

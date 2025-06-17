@@ -231,8 +231,6 @@ class CustomAppBar extends StatelessWidget {
   }
 
   Widget _buildImageCountry(BuildContext context) {
-    var countriesModel = Provider.of<CountriesModel>(context, listen: false);
-    selectCountry(context, countriesModel);
     final connection = Provider.of<ConnectivityNotifier>(context);
     return connection.hasConnection ? const CountryImageAppBar() : 0.ph;
   }

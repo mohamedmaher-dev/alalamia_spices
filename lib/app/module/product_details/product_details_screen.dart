@@ -464,6 +464,7 @@
 //
 
 import 'package:alalamia_spices/app/core/values/app_colors.dart';
+import 'package:alalamia_spices/app/global_widgets/currency_view.dart';
 import 'package:chips_choice/chips_choice.dart';
 import 'package:alalamia_spices/app/core/utils/constants.dart';
 import 'package:alalamia_spices/app/core/utils/empty_padding.dart';
@@ -684,18 +685,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                     fontFamily: "cairo"),
                                           ),
                                           5.pw,
-                                          Center(
-                                            child: Text(
-                                              "${pricesList[_selectedIndex].currency}",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleSmall!
-                                                  .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: "cairo",
-                                                      fontSize: 10.sp),
-                                            ),
+                                          CurrencyView(
+                                            currency: pricesList[_selectedIndex]
+                                                .currency,
                                           ),
                                           5.pw,
                                           Text(
