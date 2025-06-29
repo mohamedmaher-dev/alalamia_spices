@@ -125,6 +125,7 @@ class CountriesModel extends QueryModel {
     SharedPrefsService.putString("countryCode", initialCountry);
     SharedPrefsService.putString("dialCode", dialCode);
     SharedPrefsService.putString("SELECTED_COUNTRY_ID", countryId);
+    loadData();
   }
 
   Future getCountryCode() async {

@@ -63,9 +63,10 @@ dependencies:
   permission_handler:
   webview_flutter: ^4.10.0
   flutter_svg:
-  infinite_scroll_pagination:
+  infinite_scroll_pagination: ^4.1.0
   get: ^4.6.6
   curved_navigation_bar: ^1.0.6
+  mobile_scanner: ^6.0.8
 
 dev_dependencies:
   flutter_test:
@@ -116,8 +117,7 @@ flutter:
   fonts:
     - family: cairo
       fonts:
-        - asset: assets/fonts/Cairo_Regular.ttf
-
+        - asset: assets/fonts/Tajawal-Regular.ttf
     - family: Alalamia
       fonts:
         - asset: assets/fonts/GE_SS_Two_Light_1.otf

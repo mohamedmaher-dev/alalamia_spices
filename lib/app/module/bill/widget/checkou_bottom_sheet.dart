@@ -28,7 +28,6 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
       ..loadRequest(Uri.parse(widget.checkoutUrl));
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -36,13 +35,10 @@ class _CheckoutBottomSheetState extends State<CheckoutBottomSheet> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          
           BottomSheetHeader(
-            title: allTranslations.text("paymentCards"),
-            subTitle: allTranslations.text("enterPaymentDetails")
-          ),
+              title: allTranslations.text("paymentCards"),
+              subTitle: allTranslations.text("enterPaymentDetails")),
           10.ph,
-
           Flexible(
             child: SingleChildScrollView(
               child: SizedBox(

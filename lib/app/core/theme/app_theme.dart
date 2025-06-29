@@ -8,9 +8,8 @@ class AppTheme {
 
   static ThemeData getLightTheme() {
     return ThemeData(
-        drawerTheme: const DrawerThemeData(
-            backgroundColor: AppColors.secondDark
-        ),
+        drawerTheme:
+            const DrawerThemeData(backgroundColor: AppColors.secondDark),
         primaryColor: AppColors.mainLight,
         primaryColorLight: AppColors.secondLight,
         primaryColorDark: AppColors.thirdLight,
@@ -18,30 +17,23 @@ class AppTheme {
         secondaryHeaderColor: AppColors.buttonLight,
         hintColor: AppColors.buttonLight,
         fontFamily: 'Alalamia',
-
-        bottomSheetTheme: const BottomSheetThemeData(backgroundColor: AppColors.mainLight),
-
-
-        checkboxTheme:  CheckboxThemeData(
+        bottomSheetTheme:
+            const BottomSheetThemeData(backgroundColor: AppColors.mainLight),
+        checkboxTheme: CheckboxThemeData(
           checkColor: WidgetStateProperty.all(Colors.white),
-          fillColor: WidgetStateProperty.all(AppColors.accent),),
-
-        cardTheme: const CardTheme(
-            color: AppColors.mainLight
+          fillColor: WidgetStateProperty.all(AppColors.accent),
         ),
-
+        cardTheme: const CardThemeData(color: AppColors.mainLight),
         dividerTheme: const DividerThemeData(
           color: Colors.black54,
         ),
-        dialogTheme: DialogTheme(
+        dialogTheme: DialogThemeData(
             backgroundColor: AppColors.mainLight,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0))),
-        dialogBackgroundColor: AppColors.mainLight,
         shadowColor: Colors.grey.withOpacity(0.5),
         radioTheme: RadioThemeData(
             fillColor: WidgetStateProperty.all<Color>(AppColors.blackColor2)),
-
         appBarTheme: const AppBarTheme(
           iconTheme: IconThemeData(color: Colors.black),
           elevation: 0.0,
@@ -58,52 +50,70 @@ class AppTheme {
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(foregroundColor: AppColors.accent),
         ),
-
-        textTheme:  TextTheme(
+        textTheme: TextTheme(
           displayLarge: TextStyle(
               fontSize: 14.0.sp,
-              color: Colors.white, fontWeight: FontWeight.w300),
+              color: Colors.white,
+              fontWeight: FontWeight.w300),
           displayMedium: TextStyle(
               fontSize: 14.0.sp,
-              color: Colors.white, fontWeight: FontWeight.w300),
+              color: Colors.white,
+              fontWeight: FontWeight.w300),
           displaySmall: TextStyle(
-              fontSize: 35.0.sp, color: Colors.black, fontWeight: FontWeight.w400),
+              fontSize: 35.0.sp,
+              color: Colors.black,
+              fontWeight: FontWeight.w400),
           headlineMedium: TextStyle(
-              fontSize: 34.0.sp, color: Colors.black, fontWeight: FontWeight.w400),
+              fontSize: 34.0.sp,
+              color: Colors.black,
+              fontWeight: FontWeight.w400),
           headlineSmall: TextStyle(
-              fontSize: 24.0.sp, color: Colors.black, fontWeight: FontWeight.w400),
+              fontSize: 24.0.sp,
+              color: Colors.black,
+              fontWeight: FontWeight.w400),
           titleLarge: TextStyle(
-              fontSize: 20.0.sp, color: Colors.black, fontWeight: FontWeight.w500),
+              fontSize: 20.0.sp,
+              color: Colors.black,
+              fontWeight: FontWeight.w500),
           titleMedium: TextStyle(
-              fontSize: 16.0.sp, color: Colors.black, fontWeight: FontWeight.w400),
+              fontSize: 16.0.sp,
+              color: Colors.black,
+              fontWeight: FontWeight.w400),
           titleSmall: TextStyle(
-              fontSize: 14.0.sp, color: Colors.black, fontWeight: FontWeight.w500),
+              fontSize: 14.0.sp,
+              color: Colors.black,
+              fontWeight: FontWeight.w500),
           bodyLarge: TextStyle(
-              fontSize: 16.0.sp, color: Colors.black, fontWeight: FontWeight.w400),
+              fontSize: 16.0.sp,
+              color: Colors.black,
+              fontWeight: FontWeight.w400),
           bodyMedium: TextStyle(
-              fontSize: 14.0.sp, color: Colors.black, fontWeight: FontWeight.w400),
-
+              fontSize: 14.0.sp,
+              color: Colors.black,
+              fontWeight: FontWeight.w400),
           bodySmall: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold),
-
           labelSmall: TextStyle(
-              fontSize: 10.0.sp, color:
-          Colors.grey, fontWeight: FontWeight.w400 ,
+              fontSize: 10.0.sp,
+              color: Colors.grey,
+              fontWeight: FontWeight.w400,
               decoration: TextDecoration.lineThrough,
               decorationColor: Colors.grey,
-              decorationThickness: 1.5
-          ),
-        ), bottomAppBarTheme: BottomAppBarTheme(color: AppColors.mainLight), colorScheme: const ColorScheme.light(
-      primary: AppColors.accent,
-      secondary: AppColors.accent,
-      surface: AppColors.accent,
-    ).copyWith(surface: AppColors.secondLight).copyWith(secondary: AppColors.accent));
+              decorationThickness: 1.5),
+        ),
+        bottomAppBarTheme: BottomAppBarThemeData(color: AppColors.mainLight),
+        colorScheme: const ColorScheme.light(
+          primary: AppColors.accent,
+          secondary: AppColors.accent,
+          surface: AppColors.accent,
+        )
+            .copyWith(surface: AppColors.secondLight)
+            .copyWith(secondary: AppColors.accent));
   }
 
   static ThemeData getDarkTheme() {
     return ThemeData(
-        drawerTheme: const DrawerThemeData(
-            backgroundColor: AppColors.secondDark
-        ),
+        drawerTheme:
+            const DrawerThemeData(backgroundColor: AppColors.secondDark),
         primaryColor: AppColors.mainDark,
         primaryColorLight: AppColors.secondDark,
         primaryColorDark: AppColors.secondDark,
@@ -111,22 +121,22 @@ class AppTheme {
         secondaryHeaderColor: AppColors.buttonDark,
         hintColor: AppColors.mainLight2,
         fontFamily: 'Alalamia',
-        bottomSheetTheme: const BottomSheetThemeData(backgroundColor: AppColors.secondDark),
-        checkboxTheme:  CheckboxThemeData(
+        bottomSheetTheme: const BottomSheetThemeData(
+          backgroundColor: AppColors.secondDark,
+        ),
+        checkboxTheme: CheckboxThemeData(
           checkColor: WidgetStateProperty.all(Colors.white),
-          fillColor: WidgetStateProperty.all(AppColors.accent),),
+          fillColor: WidgetStateProperty.all(AppColors.accent),
+        ),
         dividerTheme: const DividerThemeData(
           color: Colors.grey,
         ),
-        cardTheme: const  CardTheme(
-            color: AppColors.secondDark
-        ),
+        cardTheme: const CardThemeData(color: AppColors.secondDark),
         shadowColor: AppColors.accent.withOpacity(0.2),
-        dialogTheme: DialogTheme(
+        dialogTheme: DialogThemeData(
             backgroundColor: AppColors.mainLight,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0))),
-        dialogBackgroundColor: AppColors.mainDark,
         radioTheme: RadioThemeData(
             fillColor: WidgetStateProperty.all<Color>(AppColors.mainLight)),
         appBarTheme: const AppBarTheme().copyWith(
@@ -148,41 +158,63 @@ class AppTheme {
             foregroundColor: AppColors.accent,
           ),
         ),
-        textTheme:  TextTheme(
+        textTheme: TextTheme(
           displayLarge: TextStyle(
-              fontSize: 14.0.sp, color: Colors.black, fontWeight: FontWeight.w300),
+              fontSize: 14.0.sp,
+              color: Colors.black,
+              fontWeight: FontWeight.w300),
           displayMedium: TextStyle(
-              fontSize: 14.0.sp, color: Colors.black, fontWeight: FontWeight.w300),
+              fontSize: 14.0.sp,
+              color: Colors.black,
+              fontWeight: FontWeight.w300),
           displaySmall: TextStyle(
-              fontSize: 48.0.sp, color: Colors.white, fontWeight: FontWeight.w400),
+              fontSize: 48.0.sp,
+              color: Colors.white,
+              fontWeight: FontWeight.w400),
           headlineMedium: TextStyle(
-              fontSize: 34.0.sp, color: Colors.white, fontWeight: FontWeight.w400),
+              fontSize: 34.0.sp,
+              color: Colors.white,
+              fontWeight: FontWeight.w400),
           headlineSmall: TextStyle(
-              fontSize: 24.0.sp, color: Colors.white, fontWeight: FontWeight.w400),
+              fontSize: 24.0.sp,
+              color: Colors.white,
+              fontWeight: FontWeight.w400),
           titleLarge: TextStyle(
-              fontSize: 20.0.sp, color: Colors.white, fontWeight: FontWeight.w500),
+              fontSize: 20.0.sp,
+              color: Colors.white,
+              fontWeight: FontWeight.w500),
           titleMedium: TextStyle(
-              fontSize: 16.0.sp, color: Colors.white, fontWeight: FontWeight.w400),
+              fontSize: 16.0.sp,
+              color: Colors.white,
+              fontWeight: FontWeight.w400),
           titleSmall: TextStyle(
-              fontSize: 14.0.sp, color: Colors.white, fontWeight: FontWeight.w500),
+              fontSize: 14.0.sp,
+              color: Colors.white,
+              fontWeight: FontWeight.w500),
           bodyLarge: TextStyle(
-              fontSize: 16.0.sp, color: Colors.white, fontWeight: FontWeight.w400),
+              fontSize: 16.0.sp,
+              color: Colors.white,
+              fontWeight: FontWeight.w400),
           bodyMedium: TextStyle(
-              fontSize: 14.0.sp, color: Colors.white, fontWeight: FontWeight.w400),
-          bodySmall: TextStyle(
-              fontSize: 12.sp, fontWeight: FontWeight.bold
-          ),
+              fontSize: 14.0.sp,
+              color: Colors.white,
+              fontWeight: FontWeight.w400),
+          bodySmall: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold),
           labelSmall: TextStyle(
-              fontSize: 10.0.sp, color:
-          Colors.white, fontWeight: FontWeight.w400 ,
+              fontSize: 10.0.sp,
+              color: Colors.white,
+              fontWeight: FontWeight.w400,
               decoration: TextDecoration.lineThrough,
               decorationColor: Colors.grey,
-              decorationThickness: 1.5
-          ),
-        ), bottomAppBarTheme: BottomAppBarTheme(color: AppColors.mainDark), colorScheme: const ColorScheme.dark(
-      primary: AppColors.accent,
-      surface: AppColors.secondDark,
-      secondary: AppColors.accent,
-    ).copyWith(surface: AppColors.secondDark).copyWith(secondary: AppColors.accentDark));
+              decorationThickness: 1.5),
+        ),
+        bottomAppBarTheme: BottomAppBarThemeData(color: AppColors.mainDark),
+        colorScheme: const ColorScheme.dark(
+          primary: AppColors.accent,
+          surface: AppColors.secondDark,
+          secondary: AppColors.accent,
+        )
+            .copyWith(surface: AppColors.secondDark)
+            .copyWith(secondary: AppColors.accentDark));
   }
 }

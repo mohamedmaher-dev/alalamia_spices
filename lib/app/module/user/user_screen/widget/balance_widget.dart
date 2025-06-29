@@ -1,13 +1,12 @@
-
 import 'package:alalamia_spices/app/core/utils/empty_padding.dart';
 import 'package:alalamia_spices/app/data/providers/userModel.dart';
+import 'package:alalamia_spices/app/global_widgets/currency_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../data/providers/translations.dart';
 import '../../../../data/providers/user_wallet_model.dart';
-
 
 class BalanceWidget extends StatelessWidget {
   const BalanceWidget({super.key});
@@ -26,8 +25,7 @@ class BalanceWidget extends StatelessWidget {
           style: Theme.of(context).textTheme.bodyMedium!.copyWith(
               fontWeight: FontWeight.bold,
               fontSize: 12.sp,
-              fontFamily: "cairo"
-          ),
+              fontFamily: "cairo"),
         ),
 
         // Icon(
@@ -38,21 +36,20 @@ class BalanceWidget extends StatelessWidget {
 
         10.pw,
         StatefulBuilder(
-          builder: (context , mySetState){
-            return  InkWell(
-              onTap: (){
-                if(userWalletModel.hiddenBalance == false){
-                  mySetState((){
+          builder: (context, mySetState) {
+            return InkWell(
+              onTap: () {
+                if (userWalletModel.hiddenBalance == false) {
+                  mySetState(() {
                     userWalletModel.hiddenBalance = true;
                   });
-                }else {
-                  mySetState((){
+                } else {
+                  mySetState(() {
                     userWalletModel.hiddenBalance = false;
                   });
                 }
-
               },
-              child:  Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -68,25 +65,18 @@ class BalanceWidget extends StatelessWidget {
                     userWalletModel.hiddenBalance == false
                         ? "* * * * *"
                         : userWalletModel.items.isEmpty
-                        ? "0.0"
-                        : userWalletModel.userBalance.toString(),
+                            ? "0.0"
+                            : userWalletModel.userBalance.toString(),
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
                         fontWeight: FontWeight.bold,
                         fontSize: 14.sp,
-                        fontFamily: "cairo"
-                    ),
+                        fontFamily: "cairo"),
                   ),
                   10.pw,
-                  Text(
-                    userWalletModel.hiddenBalance == false
-                        ? ""
-                        : userModel.userCurrency.toString(),
-                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14.sp,
-                        fontFamily: "cairo"
+                  if (userWalletModel.hiddenBalance == true)
+                    CurrencyView(
+                      currency: userModel.user.currencyName,
                     ),
-                  ),
                 ],
               ),
             );

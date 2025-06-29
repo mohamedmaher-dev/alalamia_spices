@@ -32,6 +32,10 @@ class _SplashViewState extends State<SplashView> {
     Widget nextScreen = _getNextScreen();
     await Future.delayed(const Duration(seconds: 4));
     await _checkMaintenance(nextScreen);
+    // Navigator.pushReplacement(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => nextScreen),
+    // );
   }
 
   Future<void> _checkMaintenance(Widget nextScreen) async {
@@ -52,10 +56,17 @@ class _SplashViewState extends State<SplashView> {
         );
       }
     } catch (e) {
-      _showDialog(
-        title: 'التطبيق قيد الصيانة',
-        content: 'التطبيق قيد الصيانة ، يرجى المحاولة لاحقاً',
-      );
+      if (e is DioError && e.type == DioErrorType.other) {
+        _showDialog(
+          title: 'الاتصال بالانترنت',
+          content: 'يرجى التحقق من الاتصال بالانترنت و المحاولة لاحقاً',
+        );
+      } else {
+        _showDialog(
+          title: 'خطاء',
+          content: 'حدث خطاء اثناء التحقق من الصيانة',
+        );
+      }
     }
   }
 
@@ -121,12 +132,16 @@ class _SplashViewState extends State<SplashView> {
           style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                 fontWeight: FontWeight.bold,
                 fontFamily: 'cairo',
+                color: Colors.black,
               ),
         ),
         content: Text(
           content,
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodyLarge,
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                fontFamily: 'cairo',
+                color: Colors.black,
+              ),
         ),
         actions: actions,
       ),

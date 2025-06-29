@@ -1,5 +1,3 @@
-
-
 import 'package:alalamia_spices/app/core/utils/route.dart';
 import 'package:alalamia_spices/app/exports/widget.dart';
 import 'package:alalamia_spices/app/exports/services.dart';
@@ -15,27 +13,20 @@ import '../provider/forgot_password_provider.dart';
 import '../provider/phone_provider.dart';
 import 'package:alalamia_spices/app/exports/provider.dart';
 
-
 class PhoneScreen extends StatefulWidget {
   final bool isFromForgotPasswordScreen;
-  const PhoneScreen({
-    Key? key,
-    required this.isFromForgotPasswordScreen
-  }) : super(key: key);
+  const PhoneScreen({super.key, required this.isFromForgotPasswordScreen});
 
   @override
   State<PhoneScreen> createState() => _PhoneScreenState();
 }
 
 class _PhoneScreenState extends State<PhoneScreen> {
-
-  late TextEditingController phoneController ;
+  late TextEditingController phoneController;
   GlobalKey<FormState> formKey = GlobalKey();
   String? numberCode;
   bool isLoading = false;
   late String error;
-
-
 
   @override
   void initState() {
@@ -43,7 +34,6 @@ class _PhoneScreenState extends State<PhoneScreen> {
     phoneController = TextEditingController();
     error = "";
   }
-
 
   @override
   void dispose() {
@@ -67,78 +57,72 @@ class _PhoneScreenState extends State<PhoneScreen> {
             child: ListView(
               children: [
                 widget.isFromForgotPasswordScreen == true
-                ? Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.all(10.0.w),
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Theme.of(context).primaryColor
-                      ),
-                      child: IconButton(
-                          onPressed: () {
-                            // pushScreenRemoveUntil(context, const AuthTabsScreen());
-                            pushNamedRemoveUntil(context, Routes.authTapsScreen);
-                            // userModel.isVerification = false;
-                          },
-                          icon: Icon(
-                            Icons.close,
-                            color: Theme.of(context).secondaryHeaderColor,
-                            size: 28,
-                          )
-                      ),
-                    ),
-
-
-                    Container(
-                      height: 300.h,
-                      width: MediaQuery.of(context).size.width,
-                      decoration:  BoxDecoration(
-                        image: const DecorationImage(
-                            image: AssetImage(AppImages.login), fit: BoxFit.fill),
-                        borderRadius: BorderRadius.only(
-                          bottomRight: Radius.circular(50.w),
-                          bottomLeft: Radius.circular(50.w),
-                        ),
-                      ),
-                    ),
-                    20.ph,
-                  ],
-                )
-                : 0.ph,
-
-
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.all(10.0.w),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Theme.of(context).primaryColor),
+                            child: IconButton(
+                                onPressed: () {
+                                  // pushScreenRemoveUntil(context, const AuthTabsScreen());
+                                  pushNamedRemoveUntil(
+                                      context, Routes.authTapsScreen);
+                                  // userModel.isVerification = false;
+                                },
+                                icon: Icon(
+                                  Icons.close,
+                                  color: Theme.of(context).secondaryHeaderColor,
+                                  size: 28,
+                                )),
+                          ),
+                          Container(
+                            height: 300.h,
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              image: const DecorationImage(
+                                  image: AssetImage(AppImages.login),
+                                  fit: BoxFit.fill),
+                              borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(50.w),
+                                bottomLeft: Radius.circular(50.w),
+                              ),
+                            ),
+                          ),
+                          20.ph,
+                        ],
+                      )
+                    : 0.ph,
                 Padding(
-                  padding:  EdgeInsets.all(5.0.w),
+                  padding: EdgeInsets.all(5.0.w),
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.45,
-                    padding:  EdgeInsets.all(15.0.h),
+                    padding: EdgeInsets.all(15.0.h),
                     decoration: BoxDecoration(
-                      borderRadius:    BorderRadius.only(
-                        topRight: Radius.circular(AppConstants.defaultBorderRadius.w),
-                        topLeft: Radius.circular(AppConstants.defaultBorderRadius.w)
-                      ),
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(
+                              AppConstants.defaultBorderRadius.w),
+                          topLeft: Radius.circular(
+                              AppConstants.defaultBorderRadius.w)),
                       color: Theme.of(context).primaryColor,
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-
                         Text(
                           allTranslations.text("phoneAuth"),
-                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20.sp
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(
+                                  fontWeight: FontWeight.bold, fontSize: 20.sp),
                         ),
 
-
-
                         10.ph,
-
 
                         // Container(
                         //   padding: EdgeInsets.symmetric(horizontal: 10.w),
@@ -207,49 +191,43 @@ class _PhoneScreenState extends State<PhoneScreen> {
                                   print(numberCode);
                                 }
                               });
-                              countriesModel.chosenInitialCountry = number.isoCode!;
+                              countriesModel.chosenInitialCountry =
+                                  number.isoCode!;
                             },
-                            textEditingController: phoneController
-                        ),
-
-
+                            textEditingController: phoneController),
 
                         20.ph,
 
                         StatefulBuilder(
-                          builder: (context , mySetState){
+                          builder: (context, mySetState) {
                             return CustomButtons(
                               height: 45.h,
                               text: allTranslations.text("verification"),
-                              buttonColor: Theme.of(context).secondaryHeaderColor,
-                              isLoading : userModel.isVerification,
+                              buttonColor:
+                                  Theme.of(context).secondaryHeaderColor,
+                              isLoading: userModel.isVerification,
                               onTap: () {
+                                if (formKey.currentState!.validate()) {
+                                  userModel.isVerification = true;
 
-                                if(formKey.currentState!.validate()){
-                                    userModel.isVerification = true;
-
-
-                                  if(widget.isFromForgotPasswordScreen == true){
-                                    ForgotPasswordProvider().startPhoneAuth (
-                                        context : context,
-                                        numberCode : numberCode.toString(),
-
+                                  if (widget.isFromForgotPasswordScreen ==
+                                      true) {
+                                    ForgotPasswordProvider().startPhoneAuth(
+                                      context: context,
+                                      numberCode: numberCode.toString(),
                                     );
                                     // startPhoneAuth(true);
-                                  }else {
+                                  } else {
                                     // pushScreen(context, SignUpTab(phoneNumber: numberCode.toString()));
                                     PhoneProvider().startPhoneAuth(
-                                        context : context,
-                                        numberCode : numberCode.toString(),
+                                      context: context,
+                                      numberCode: numberCode.toString(),
                                     );
                                   }
-
-                                }else {
+                                } else {
                                   userModel.isVerification = false;
                                   formKey.currentState!.validate();
                                 }
-
-
                               },
                             );
                           },

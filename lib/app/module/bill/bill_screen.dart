@@ -1421,6 +1421,7 @@ import 'package:alalamia_spices/app/core/utils/constants.dart';
 import 'package:alalamia_spices/app/core/utils/empty_padding.dart';
 import 'package:alalamia_spices/app/data/providers/shipping/aramex_provider.dart';
 import 'package:alalamia_spices/app/exports/provider.dart';
+import 'package:alalamia_spices/app/global_widgets/currency_view.dart';
 import 'package:alalamia_spices/app/module/bill/provider/bill_provider.dart';
 import 'package:alalamia_spices/app/module/bill/widget/bill_shimmer.dart';
 import 'package:alalamia_spices/app/module/bill/widget/checkou_bottom_sheet.dart';
@@ -1523,7 +1524,7 @@ class _SubBillScreenState extends State<SubBillScreen> {
   double total = 0.0;
   double tax = 0.0;
   double deliveryPriceAfterDiscount = 0.0;
-  int paymentIndex = 0;
+  int? paymentIndex;
   var returnOfRequest;
   bool isUnsupportedCurrency = false;
   // String chosenPayment = allTranslations.text("receipt");
@@ -2375,7 +2376,7 @@ class _SubBillScreenState extends State<SubBillScreen> {
                                                                       false;
                                                                   chosenPaymentNumber = model
                                                                       .items[
-                                                                          paymentIndex]
+                                                                          paymentIndex!]
                                                                       .number
                                                                       .toString();
                                                                 });
@@ -2613,6 +2614,10 @@ class _SubBillScreenState extends State<SubBillScreen> {
                                                                           builder: (context) =>
                                                                               CheckoutBottomSheet(checkoutUrl: tapPaymentModel.transactionUrl),
                                                                         );
+                                                                        await _checkTapPaymentIsResult(
+                                                                            context,
+                                                                            tapPaymentModel,
+                                                                            sendRequest);
                                                                         Navigator.pop(
                                                                             context);
                                                                       } else {
@@ -2809,18 +2814,9 @@ class _SubBillScreenState extends State<SubBillScreen> {
                                                                 "cairo"),
                                                   ),
                                                   5.pw,
-                                                  Center(
-                                                    child: Text(
-                                                      "${userModel.user.currencyName}",
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .titleSmall!
-                                                          .copyWith(
-                                                              fontFamily:
-                                                                  "cairo",
-                                                              fontSize: 10.sp),
-                                                    ),
-                                                  )
+                                                  CurrencyView(
+                                                      currency: userModel
+                                                          .user.currencyName)
                                                 ],
                                               ),
                                               mainAxisAlignment:
@@ -2862,22 +2858,9 @@ class _SubBillScreenState extends State<SubBillScreen> {
                                                                 "cairo"),
                                                   ),
                                                   5.pw,
-                                                  Center(
-                                                    child: Text(
-                                                      deliveryPrice
-                                                                  .toString() ==
-                                                              "0.0"
-                                                          ? ""
-                                                          : "${userModel.user.currencyName}",
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .titleSmall!
-                                                          .copyWith(
-                                                              fontFamily:
-                                                                  "cairo",
-                                                              fontSize: 10.sp),
-                                                    ),
-                                                  )
+                                                  CurrencyView(
+                                                      currency: userModel
+                                                          .user.currencyName)
                                                 ],
                                               ),
                                               mainAxisAlignment:
@@ -3210,92 +3193,109 @@ class _SubBillScreenState extends State<SubBillScreen> {
                   bottomNavigationBar: userModel.isLoading ||
                           userModel.loadingFailed
                       ? const BillShimmer()
-                      : Padding(
-                          padding: EdgeInsets.all(10.0.w),
-                          child: isUnsupportedCurrency == true
-                              ? CustomButtons(
-                                  height: 45.h,
-                                  text: allTranslations.text("confirmPurchase"),
-                                  buttonColor: Colors.grey)
-                              : CustomButtons(
-                                  height: 45.h,
-                                  text: allTranslations.text("confirmPurchase"),
-                                  isLoading: isLoading,
-                                  buttonColor:
-                                      Theme.of(context).secondaryHeaderColor,
-                                  onTap: () async {
-                                    if (connection.hasConnection) {
-                                      if (chosenPaymentNumber == walletNumber &&
-                                          total >
-                                              double.parse(userWalletModel
-                                                  .userCurrentBalance
-                                                  .currentBalance
-                                                  .toString())) {
-                                        return CustomToast.showFlutterToast(
-                                            context: context,
-                                            message: allTranslations
-                                                .text("noEnoughBalance"));
-                                      } else if (chosenPaymentNumber ==
-                                              payPalNumber &&
-                                          (payPalModel.message ==
-                                                  "Requested resource ID was not found." ||
-                                              payPalModel.message == "")) {
-                                        return CustomToast.showFlutterToast(
-                                            context: context,
-                                            message: allTranslations
-                                                .text("paymentNotComplete"));
-                                      } else if (chosenPaymentNumber ==
-                                          cardPaymentNumber) {
-                                        CustomLoadingDialog.showLoading(
-                                            context);
-                                        tapPaymentModel
-                                            .getRetrieveCharge()
-                                            .then((value) {
-                                          if (tapPaymentModel.chargeId != '' &&
-                                              tapPaymentModel.tapId != '') {
-                                            CustomLoadingDialog.hideLoading(
-                                                context);
-                                            if (tapPaymentModel.chargeId ==
-                                                    tapPaymentModel.tapId &&
-                                                tapPaymentModel.chargeStatus ==
-                                                    "CAPTURED") {
-                                              setState(() {
-                                                isLoading = true;
-                                              });
+                      : Visibility(
+                          visible: paymentIndex != null,
+                          replacement: Padding(
+                            padding: EdgeInsets.all(10.0.w),
+                            child: CustomButtons(
+                                height: 45.h,
+                                text: "برجاء اختيار طريقة دفع",
+                                buttonColor: Colors.grey),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(10.0.w),
+                            child: isUnsupportedCurrency == true
+                                ? CustomButtons(
+                                    height: 45.h,
+                                    text:
+                                        allTranslations.text("confirmPurchase"),
+                                    buttonColor: Colors.grey)
+                                : CustomButtons(
+                                    height: 45.h,
+                                    text:
+                                        allTranslations.text("confirmPurchase"),
+                                    isLoading: isLoading,
+                                    buttonColor:
+                                        Theme.of(context).secondaryHeaderColor,
+                                    onTap: () async {
+                                      if (connection.hasConnection) {
+                                        if (chosenPaymentNumber ==
+                                                walletNumber &&
+                                            total >
+                                                double.parse(userWalletModel
+                                                    .userCurrentBalance
+                                                    .currentBalance
+                                                    .toString())) {
+                                          return CustomToast.showFlutterToast(
+                                              context: context,
+                                              message: allTranslations
+                                                  .text("noEnoughBalance"));
+                                        } else if (chosenPaymentNumber ==
+                                                payPalNumber &&
+                                            (payPalModel.message ==
+                                                    "Requested resource ID was not found." ||
+                                                payPalModel.message == "")) {
+                                          return CustomToast.showFlutterToast(
+                                              context: context,
+                                              message: allTranslations
+                                                  .text("paymentNotComplete"));
+                                        } else if (chosenPaymentNumber ==
+                                            cardPaymentNumber) {
+                                          CustomLoadingDialog.showLoading(
+                                              context);
+                                          tapPaymentModel
+                                              .getRetrieveCharge()
+                                              .then((value) {
+                                            if (tapPaymentModel.chargeId !=
+                                                    '' &&
+                                                tapPaymentModel.tapId != '') {
+                                              CustomLoadingDialog.hideLoading(
+                                                  context);
+                                              if (tapPaymentModel.chargeId ==
+                                                      tapPaymentModel.tapId &&
+                                                  tapPaymentModel
+                                                          .chargeStatus ==
+                                                      "CAPTURED") {
+                                                setState(() {
+                                                  isLoading = true;
+                                                });
 
-                                              /// send request
-                                              sendRequest();
+                                                /// send request
+                                                sendRequest();
+                                              } else {
+                                                return CustomToast.showFlutterToast(
+                                                    context: context,
+                                                    message: allTranslations.text(
+                                                        "paymentNotComplete"));
+                                              }
                                             } else {
-                                              return CustomToast.showFlutterToast(
-                                                  context: context,
-                                                  message: allTranslations.text(
-                                                      "paymentNotComplete"));
+                                              return CustomToast
+                                                  .showFlutterToast(
+                                                      context: context,
+                                                      message:
+                                                          allTranslations.text(
+                                                              "errorOccurred"));
                                             }
-                                          } else {
-                                            return CustomToast.showFlutterToast(
-                                                context: context,
-                                                message: allTranslations
-                                                    .text("errorOccurred"));
-                                          }
-                                        });
-                                      } else {
-                                        setState(() {
-                                          isLoading = true;
-                                        });
+                                          });
+                                        } else {
+                                          setState(() {
+                                            isLoading = true;
+                                          });
 
-                                        /// send request
-                                        await sendRequest();
+                                          /// send request
+                                          await sendRequest();
+                                        }
+                                      } else {
+                                        CustomToast.showFlutterToast(
+                                          context: context,
+                                          message: allTranslations
+                                              .text("networkConnection"),
+                                          toastLength: Toast.LENGTH_LONG,
+                                        );
                                       }
-                                    } else {
-                                      CustomToast.showFlutterToast(
-                                        context: context,
-                                        message: allTranslations
-                                            .text("networkConnection"),
-                                        toastLength: Toast.LENGTH_LONG,
-                                      );
-                                    }
-                                  },
-                                ),
+                                    },
+                                  ),
+                          ),
                         ))
               : Scaffold(
                   backgroundColor: Theme.of(context).colorScheme.surface,
@@ -3318,6 +3318,32 @@ class _SubBillScreenState extends State<SubBillScreen> {
         );
       },
     );
+  }
+
+  Future<void> _checkTapPaymentIsResult(BuildContext context,
+      TapModel tapPaymentModel, Future<dynamic> Function() sendRequest) async {
+    CustomLoadingDialog.showLoading(context);
+    await tapPaymentModel.getRetrieveCharge().then((value) {
+      if (tapPaymentModel.chargeId != '' && tapPaymentModel.tapId != '') {
+        CustomLoadingDialog.hideLoading(context);
+        if (tapPaymentModel.chargeId == tapPaymentModel.tapId &&
+            tapPaymentModel.chargeStatus == "CAPTURED") {
+          setState(() {
+            isLoading = true;
+          });
+
+          /// send request
+          sendRequest();
+        } else {
+          return CustomToast.showFlutterToast(
+              context: context,
+              message: allTranslations.text("paymentNotComplete"));
+        }
+      } else {
+        return CustomToast.showFlutterToast(
+            context: context, message: allTranslations.text("errorOccurred"));
+      }
+    });
   }
 
   Widget getStateOfWalletBalanceWidget() {

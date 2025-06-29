@@ -1,10 +1,9 @@
-
 import 'package:flutter/material.dart';
 import '../../services/dark_theme_preference.dart';
 
 class ThemeModel with ChangeNotifier {
   DarkThemePreference darkThemePreference = DarkThemePreference();
-  bool _darkTheme = false;
+  bool _darkTheme = true;
 
   bool get darkTheme => _darkTheme;
 
@@ -14,4 +13,3 @@ class ThemeModel with ChangeNotifier {
     notifyListeners();
   }
 }
-
