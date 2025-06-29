@@ -1,5 +1,3 @@
-
-
 import 'dart:math';
 import 'package:alalamia_spices/app/core/utils/empty_padding.dart';
 import 'package:alalamia_spices/app/core/values/app_lottie.dart';
@@ -14,21 +12,15 @@ import '../../../core/utils/constants.dart';
 import '../../../core/values/app_images.dart';
 import 'package:alalamia_spices/app/exports/widget.dart';
 
-
 class ForgotPasswordScreen extends StatefulWidget {
   final String phoneNumber;
-  const ForgotPasswordScreen({
-    Key? key,
-    required this.phoneNumber
-  }) : super(key: key);
+  const ForgotPasswordScreen({super.key, required this.phoneNumber});
 
   @override
   State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-
-
   late TextEditingController newPasswordController;
   late TextEditingController confirmPasswordController;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -44,12 +36,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     confirmPasswordController = TextEditingController();
     int min = 100000; //min and max values act as your 6 digit range
     int max = 999999;
-    var random =   Random();
+    var random = Random();
     rNum = min + random.nextInt(max - min);
     debugPrint(rNum.toString());
     error = "";
   }
-
 
   @override
   void dispose() {
@@ -62,12 +53,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         body: ChangeNotifierProvider<UserModel>(
           create: (context) => UserModel(context),
           child: Consumer<UserModel>(
-            builder: (context , model , child){
-              return  Form(
+            builder: (context, model, child) {
+              return Form(
                 key: formKey,
                 child: ListView(
                   children: [
@@ -75,32 +66,30 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-
                         Container(
                           margin: EdgeInsets.all(10.0.w),
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Theme.of(context).primaryColor
-                          ),
+                              color: Theme.of(context).primaryColor),
                           child: IconButton(
                               onPressed: () {
-                                pushScreenRemoveUntil(context, const AuthTabsScreen());
+                                pushScreenRemoveUntil(
+                                    context, const AuthTabsScreen());
                                 // userModel.isVerification = false;
                               },
                               icon: Icon(
                                 Icons.close,
                                 color: Theme.of(context).secondaryHeaderColor,
                                 size: 28,
-                              )
-                          ),
+                              )),
                         ),
-
                         Container(
                           height: 300.h,
                           width: MediaQuery.of(context).size.width,
-                          decoration:  BoxDecoration(
+                          decoration: BoxDecoration(
                             image: const DecorationImage(
-                                image: AssetImage(AppImages.login), fit: BoxFit.fill),
+                                image: AssetImage(AppImages.login),
+                                fit: BoxFit.fill),
                             borderRadius: BorderRadius.only(
                               bottomRight: Radius.circular(50.w),
                               bottomLeft: Radius.circular(50.w),
@@ -108,42 +97,41 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           ),
                         ),
                         20.ph,
-
                         Padding(
-                          padding:  EdgeInsets.all(5.0.w),
+                          padding: EdgeInsets.all(5.0.w),
                           child: Container(
                             height: MediaQuery.of(context).size.height * 0.45,
-                            padding:  EdgeInsets.all(15.0.h),
+                            padding: EdgeInsets.all(15.0.h),
                             decoration: BoxDecoration(
-                              borderRadius:    BorderRadius.only(
-                                  topRight: Radius.circular(AppConstants.defaultBorderRadius.w),
-                                  topLeft: Radius.circular(AppConstants.defaultBorderRadius.w)
-                              ),
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(
+                                      AppConstants.defaultBorderRadius.w),
+                                  topLeft: Radius.circular(
+                                      AppConstants.defaultBorderRadius.w)),
                               color: Theme.of(context).primaryColor,
                             ),
                             child: ListView(
                               shrinkWrap: true,
                               primary: false,
                               children: [
-
                                 Text(
                                   allTranslations.text("enterNewPassword"),
-                                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20.sp
-                                  ),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20.sp),
                                 ),
-
                                 20.ph,
-
-
-
                                 TextFormFieldWithName(
                                   controller: newPasswordController,
                                   keyboardType: TextInputType.text,
                                   textInputAction: TextInputAction.next,
-                                  hintTextFormField:  allTranslations.text("newPassword"),
-                                  fieldName: allTranslations.text("enterNewPassword"),
+                                  hintTextFormField:
+                                      allTranslations.text("newPassword"),
+                                  fieldName:
+                                      allTranslations.text("enterNewPassword"),
                                   obscureText: _isHidden2,
                                   suffixIcon: InkWell(
                                     onTap: _toggleNewPasswordView,
@@ -152,37 +140,38 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                           ? Icons.visibility
                                           : Icons.visibility_off,
                                       size: 20,
-                                      color: Theme.of(context).secondaryHeaderColor, // black color
+                                      color: Theme.of(context)
+                                          .secondaryHeaderColor, // black color
                                     ),
                                   ),
-
-                                  validator: (value){
+                                  validator: (value) {
                                     if (model.errors.containsKey('password')) {
                                       return model.errors['password'][0];
                                     }
                                     if (value.length == 0) {
-                                      return allTranslations.text('newPassword');
+                                      return allTranslations
+                                          .text('newPassword');
                                     }
-                                    if ( value.length <= 7) {
-                                      return allTranslations.text("passwordFieldsNumber");
+                                    if (value.length <= 7) {
+                                      return allTranslations
+                                          .text("passwordFieldsNumber");
                                     }
 
                                     return null;
                                   },
-                                  onFieldSubmitted: (){
+                                  onFieldSubmitted: () {
                                     FocusScope.of(context).nextFocus();
                                   },
                                 ),
-
                                 20.ph,
-
-
                                 TextFormFieldWithName(
                                   controller: confirmPasswordController,
                                   keyboardType: TextInputType.text,
                                   textInputAction: TextInputAction.done,
-                                  hintTextFormField:  allTranslations.text("confirmPassword"),
-                                  fieldName: allTranslations.text("confirmCurrentPassword"),
+                                  hintTextFormField:
+                                      allTranslations.text("confirmPassword"),
+                                  fieldName: allTranslations
+                                      .text("confirmCurrentPassword"),
                                   obscureText: _isHidden2,
                                   suffixIcon: InkWell(
                                     onTap: _toggleNewPasswordView,
@@ -191,89 +180,91 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                           ? Icons.visibility
                                           : Icons.visibility_off,
                                       size: 20,
-                                      color: Theme.of(context).secondaryHeaderColor, // black color
+                                      color: Theme.of(context)
+                                          .secondaryHeaderColor, // black color
                                     ),
                                   ),
-
-                                  validator: (value){
-                                    if (model.errors.containsKey('c_password')) {
+                                  validator: (value) {
+                                    if (model.errors
+                                        .containsKey('c_password')) {
                                       return model.errors['c_password'][0];
                                     }
-                                    if ( value.length == 0) {
-                                      return allTranslations.text('confirmPassword');
+                                    if (value.length == 0) {
+                                      return allTranslations
+                                          .text('confirmPassword');
                                     }
                                     if (value != newPasswordController.text) {
-                                      return allTranslations.text("passwordNotMatch");
+                                      return allTranslations
+                                          .text("passwordNotMatch");
                                     }
                                     return null;
                                   },
-                                  onFieldSubmitted: (){
+                                  onFieldSubmitted: () {
                                     FocusScope.of(context).unfocus();
                                   },
                                 ),
-
                                 20.ph,
-
-                               StatefulBuilder(
-                                 builder: (context , mySetState){
-                                   return  CustomButtons(
-                                     height: 45.h,
-                                     text: allTranslations.text("agree"),
-                                     textWidget: isLoading == true
-                                         ? const CircularLoading()
-                                         : null,
-                                     buttonColor: isLoading == true
-                                         ? Theme.of(context).colorScheme.surface
-                                         : Theme.of(context).secondaryHeaderColor,
-                                     onTap: () async{
-                                       if (formKey.currentState!.validate()) {
-                                         mySetState((){
-                                           isLoading = true;
-                                         });
-                                         await model.smsResetPassword(
-                                             phone: widget.phoneNumber,
-                                             code: rNum.toString(),
-                                             password: newPasswordController.text,
-                                             passwordConfirmation: confirmPasswordController.text
-
-                                         );
-                                         if (model.isLoaded) {
-                                           mySetState((){
-                                             isLoading = false;
-                                           });
-                                           CustomDialog.showCustomDialog(
-                                               context: context,
-                                               barrierDismissible: false,
-                                               title: allTranslations.text("passwordChangedSuccessfully"),
-                                               withActions: true,
-                                               withYesButton: true,
-                                               icon: Lottie.asset(
-                                                   AppLottie.checkMark,
-                                                   repeat: false
-                                               ),
-
-                                               onPressed: () {
-                                                 pushScreenRemoveUntil(context, const AuthTabsScreen());
-                                                 // CustomLoadingDialog.hideLoading(context);
-                                               }
-                                           );
-
-                                         } else {
-                                           mySetState((){
-                                             isLoading = false;
-                                           });
-                                         }
-
-                                       } else {
-                                         mySetState((){
-                                           isLoading = false;
-                                         });
-                                         formKey.currentState!.validate();
-                                       }
-                                     },
-                                   );
-                                 },
-                               )
+                                StatefulBuilder(
+                                  builder: (context, mySetState) {
+                                    return CustomButtons(
+                                      height: 45.h,
+                                      text: allTranslations.text("agree"),
+                                      textWidget: isLoading == true
+                                          ? const CircularLoading()
+                                          : null,
+                                      buttonColor: isLoading == true
+                                          ? Theme.of(context)
+                                              .colorScheme
+                                              .surface
+                                          : Theme.of(context)
+                                              .secondaryHeaderColor,
+                                      onTap: () async {
+                                        if (formKey.currentState!.validate()) {
+                                          mySetState(() {
+                                            isLoading = true;
+                                          });
+                                          await model.smsResetPassword(
+                                              phone: widget.phoneNumber,
+                                              code: rNum.toString(),
+                                              password:
+                                                  newPasswordController.text,
+                                              passwordConfirmation:
+                                                  confirmPasswordController
+                                                      .text);
+                                          if (model.isLoaded) {
+                                            mySetState(() {
+                                              isLoading = false;
+                                            });
+                                            CustomDialog.showCustomDialog(
+                                                context: context,
+                                                barrierDismissible: false,
+                                                title: allTranslations.text(
+                                                    "passwordChangedSuccessfully"),
+                                                withActions: true,
+                                                withYesButton: true,
+                                                icon: Lottie.asset(
+                                                    AppLottie.checkMark,
+                                                    repeat: false),
+                                                onPressed: () {
+                                                  pushScreenRemoveUntil(context,
+                                                      const AuthTabsScreen());
+                                                  // CustomLoadingDialog.hideLoading(context);
+                                                });
+                                          } else {
+                                            mySetState(() {
+                                              isLoading = false;
+                                            });
+                                          }
+                                        } else {
+                                          mySetState(() {
+                                            isLoading = false;
+                                          });
+                                          formKey.currentState!.validate();
+                                        }
+                                      },
+                                    );
+                                  },
+                                )
                               ],
                             ),
                           ),
@@ -289,10 +280,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       ),
     );
   }
+
   void _toggleNewPasswordView() {
     setState(() {
       _isHidden2 = !_isHidden2;
     });
   }
-
 }

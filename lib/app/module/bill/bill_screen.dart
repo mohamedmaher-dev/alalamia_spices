@@ -2614,6 +2614,10 @@ class _SubBillScreenState extends State<SubBillScreen> {
                                                                           builder: (context) =>
                                                                               CheckoutBottomSheet(checkoutUrl: tapPaymentModel.transactionUrl),
                                                                         );
+                                                                        await _checkTapPaymentIsResult(
+                                                                            context,
+                                                                            tapPaymentModel,
+                                                                            sendRequest);
                                                                         Navigator.pop(
                                                                             context);
                                                                       } else {
@@ -3314,6 +3318,32 @@ class _SubBillScreenState extends State<SubBillScreen> {
         );
       },
     );
+  }
+
+  Future<void> _checkTapPaymentIsResult(BuildContext context,
+      TapModel tapPaymentModel, Future<dynamic> Function() sendRequest) async {
+    CustomLoadingDialog.showLoading(context);
+    await tapPaymentModel.getRetrieveCharge().then((value) {
+      if (tapPaymentModel.chargeId != '' && tapPaymentModel.tapId != '') {
+        CustomLoadingDialog.hideLoading(context);
+        if (tapPaymentModel.chargeId == tapPaymentModel.tapId &&
+            tapPaymentModel.chargeStatus == "CAPTURED") {
+          setState(() {
+            isLoading = true;
+          });
+
+          /// send request
+          sendRequest();
+        } else {
+          return CustomToast.showFlutterToast(
+              context: context,
+              message: allTranslations.text("paymentNotComplete"));
+        }
+      } else {
+        return CustomToast.showFlutterToast(
+            context: context, message: allTranslations.text("errorOccurred"));
+      }
+    });
   }
 
   Widget getStateOfWalletBalanceWidget() {

@@ -5,6 +5,7 @@ import 'package:alalamia_spices/app/exports/provider.dart';
 import 'package:alalamia_spices/app/module/search/widget/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
 import '../../../core/values/app_lottie.dart';
 import '../../../global_widgets/custom_message.dart';
@@ -75,7 +76,11 @@ class _SearchBodyState extends State<SearchBody> {
           padding: EdgeInsets.symmetric(horizontal: 5.0.w),
           child: CustomTextFormField(
             onTap: () {
-              searchModel.isSearching = false;
+              searchController.clear();
+              setState(() {
+                searchModel.searchQuery = "";
+                searchModel.isSearching = false;
+              });
             },
             controller: searchController,
             keyboardType: TextInputType.text,
@@ -83,36 +88,52 @@ class _SearchBodyState extends State<SearchBody> {
             hintText: allTranslations.text("searchHintTxt"),
             contentPadding:
                 EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-            suffixIcon: InkWell(
-              onTap: () {
-                if (searchController.text.isNotEmpty) {
-                  searchController.clear();
-                  setState(() {
-                    searchModel.searchQuery = "";
-                    searchModel.isSearching = false;
-                  });
-                } else {
-                  if (searchController.text != "") {
-                    setState(() {
-                      searchModel.isSearching = true;
-                      searchModel.searchQuery = searchController.text;
-                    });
-                  } else {
-                    setState(() {
+            suffixIcon: searchController.text.isNotEmpty
+                ? InkWell(
+                    onTap: () {
+                      if (searchController.text.isNotEmpty) {
+                        searchController.clear();
+                        setState(() {
+                          searchModel.searchQuery = "";
+                          searchModel.isSearching = false;
+                        });
+                      } else {
+                        if (searchController.text != "") {
+                          setState(() {
+                            searchModel.isSearching = true;
+                            searchModel.searchQuery = searchController.text;
+                          });
+                        } else {
+                          setState(() {
+                            searchModel.isSearching = false;
+                            searchModel.searchQuery = "";
+                          });
+                        }
+                      }
+                    },
+                    child: Icon(
+                      Icons.cancel_outlined,
+                      size: 25,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  )
+                : IconButton(
+                    onPressed: () {
                       searchModel.isSearching = false;
-                      searchModel.searchQuery = "";
-                    });
-                  }
-                }
-              },
-              child: Icon(
-                searchController.text.isNotEmpty
-                    ? Icons.cancel_outlined
-                    : Icons.search,
-                size: 25,
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-            ),
+                      showDialog(
+                        context: context,
+                        builder: (context) => _QRScanner(
+                          onScan: (String value) {
+                            _onSearchTextChanged(value, searchModel);
+                          },
+                        ),
+                      );
+                    },
+                    icon: Icon(
+                      Icons.qr_code_scanner_rounded,
+                      size: 25,
+                      color: Theme.of(context).colorScheme.secondary,
+                    )),
             onEditingComplete: () {
               searchController.clear();
               FocusScope.of(context).unfocus();
@@ -192,6 +213,81 @@ class _SearchBodyState extends State<SearchBody> {
                 ),
               )
       ],
+    );
+  }
+}
+
+class _QRScanner extends StatefulWidget {
+  const _QRScanner({required this.onScan});
+  @override
+  State<_QRScanner> createState() => __QRScannerState();
+  final Function(String) onScan;
+}
+
+class __QRScannerState extends State<_QRScanner> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(
+        alignment: Alignment.center,
+        children: [
+          MobileScanner(
+            onDetect: (barcodes) {
+              widget.onScan(barcodes.barcodes.first.rawValue.toString());
+              Navigator.pop(context);
+            },
+          ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(top: 40),
+              child: Text(
+                'امسح الرمز',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    shadows: [
+                      Shadow(
+                          blurRadius: 4,
+                          color: Colors.black45,
+                          offset: Offset(1, 1)),
+                    ]),
+              ),
+            ),
+          ),
+          Center(
+            child: Container(
+              width: 250,
+              height: 250,
+              decoration: BoxDecoration(
+                border: Border.all(
+                    color: Theme.of(context).colorScheme.secondary, width: 3),
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 80),
+              child: Text(
+                'ضع الرمز داخل الإطار للمسح التلقائي',
+                style: TextStyle(color: Colors.white70, fontSize: 16),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 30,
+            left: 10,
+            child: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

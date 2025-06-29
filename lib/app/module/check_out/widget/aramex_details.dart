@@ -5,7 +5,9 @@ import 'package:alalamia_spices/app/data/providers/translations.dart';
 import 'package:alalamia_spices/app/data/providers/userModel.dart';
 import 'package:alalamia_spices/app/exports/services.dart';
 import 'package:alalamia_spices/app/exports/widget.dart';
+import 'package:alalamia_spices/app/module/app_config/app_config_screen.dart';
 import 'package:alalamia_spices/app/module/check_out/providers/checkout_form_provider.dart';
+import 'package:alalamia_spices/app/module/check_out/widget/iata_codes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -275,13 +277,18 @@ class _AramexFormState extends State<AramexForm> {
                   if (formProvider.formKey.currentState!.validate()) {
                     List<Placemark> placemarks = await placemarkFromCoordinates(
                         double.parse(chosenLat!), double.parse(chosenLong!));
+                    final iata = iataCodes[
+                        placemarks.first.isoCountryCode!.toUpperCase()];
                     final data = ShipmentData(
+                      countryCode:
+                          placemarks.first.isoCountryCode!.toUpperCase(),
+                      stateOrProvinceCode: iata,
                       line1: !widget.canChangeCountry
                           ? chosenLocationName.toString()
-                          : placemarks.first.country,
+                          : placemarks.first.street,
                       city: !widget.canChangeCountry
                           ? formProvider.cityController.text
-                          : placemarks.first.administrativeArea,
+                          : placemarks.first.locality,
                       longitude: double.parse(chosenLong.toString()),
                       latitude: double.parse(chosenLat.toString()),
                       title: chosenLocationName.toString(),
